@@ -1,0 +1,41 @@
+===========================================
+SYSTEM ARCHITECTURE — Student Management System
+===========================================
+
+3-TIER ARCHITECTURE:
+
++--------------------------------------------------+
+|              TIER 1: FRONTEND                    |
+|                                                  |
+|   HTML + CSS + JavaScript                        |
+|   - Add Student Form                             |
+|   - View Students Page                           |
+|   - Attendance Page                              |
+|   - Marks Page                                   |
+|   - Dashboard                                    |
++--------------------------------------------------+
+                    |
+                    | HTTP Requests
+                    |
++--------------------------------------------------+
+|              TIER 2: BACKEND                     |
+|                                                  |
+|   Python (Flask)                                 |
+|   - Student Controller                           |
+|   - Course Controller                            |
+|   - Attendance Controller                        |
+|   - Marks Controller                             |
++--------------------------------------------------+
+                    |
+                    | SQL Queries
+                    |
++--------------------------------------------------+
+|              TIER 3: DATABASE                    |
+|                                                  |
+|   MySQL                                          |
+|   - Students Table                               |
+|   - Courses Table                                |
+|   - Enrollment Table                             |
+|   - Attendance Table                             |
+|   - Marks Table                                  |
++--------------------------------------------------+
