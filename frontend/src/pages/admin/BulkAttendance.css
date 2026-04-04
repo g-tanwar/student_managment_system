@@ -1,0 +1,88 @@
+.attendance-selectors {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  border: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.selector-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.selector-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.selector-group select,
+.selector-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  color: #1e293b;
+  box-sizing: border-box;
+}
+
+.selector-group select:focus,
+.selector-group input:focus {
+  outline: none;
+  border-color: #27ae60;
+  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+}
+
+.btn-fetch {
+  background-color: #3b82f6; /* Blue */
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  height: max-content;
+}
+
+.btn-fetch:hover {
+  background-color: #2563eb;
+}
+
+.btn-fetch:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.radio-label.present { color: #27ae60; }
+.radio-label.absent { color: #e74c3c; }
+.radio-label.late { color: #f59e0b; }
+
+.submit-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
