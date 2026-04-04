@@ -53,4 +53,32 @@ document.addEventListener('DOMContentLoaded', () => {
             fadeInObserver.observe(card);
         });
     }
+
+    // Auth state and Sign Out logic
+    const btnLogin = document.querySelector('.btn-login');
+    if (btnLogin) {
+        const isLoggedIn = localStorage.getItem('userLoggedIn') === 'true';
+        // Only run logic if we are logged in, otherwise let it be a normal Login link
+        if (isLoggedIn) {
+            btnLogin.textContent = 'Sign Out';
+            btnLogin.style.backgroundColor = '#ef4444'; // Make signout button red visually
+            btnLogin.setAttribute('href', '#');
+            
+            btnLogin.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Clear all authentication data
+                localStorage.removeItem('userLoggedIn');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userEmail');
+                
+                // Detect whether we're on root index or inside /pages folder to redirect right
+                const currentPath = window.location.pathname;
+                if (currentPath.includes('/pages/')) {
+                    window.location.href = 'login.html';
+                } else {
+                    window.location.href = 'pages/login.html';
+                }
+            });
+        }
+    }
 });

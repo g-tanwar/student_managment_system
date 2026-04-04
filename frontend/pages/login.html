@@ -7,19 +7,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../styles/style.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
     <!-- Navbar -->
     <nav class="navbar scrolled">
         <div class="nav-container">
-            <a href="index.html" class="logo">
+            <a href="../index.html" class="logo">
                 <i class="ph ph-graduation-cap"></i>
                 EduManage
             </a>
             <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
+                <li><a href="../index.html">Home</a></li>
             </ul>
         </div>
     </nav>
@@ -57,15 +57,22 @@
         </div>
     </div>
 
+    <!-- Ensure external functionality is loaded -->
+    <script src="../scripts/script.js"></script>
+
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Add proper form handling (prevent reload)
             const role = document.getElementById('role').value;
-            // Store state in localStorage
+            const email = document.getElementById('email').value;
+            
+            // Implement login functionality using localStorage (store user data and role)
             localStorage.setItem('userLoggedIn', 'true');
             localStorage.setItem('userRole', role);
-            // Redirect to dashboard (index.html or dashboard.html)
-            window.location.href = 'index.html';
+            localStorage.setItem('userEmail', email);
+            
+            // Redirect user to dashboard after login
+            window.location.href = '../index.html';
         });
     </script>
 </body>

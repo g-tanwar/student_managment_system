@@ -1,0 +1,9 @@
+{
+  "name": "student-management-frontend",
+  "version": "1.0.0",
+  "description": "Student Management System Frontend",
+  "scripts": {
+    "dev": "npx serve ."
+  },
+  "dependencies": {}
+}
