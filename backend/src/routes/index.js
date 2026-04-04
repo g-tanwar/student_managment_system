@@ -10,6 +10,7 @@ const attendanceRoutes = require('./attendance.routes');
 const feeRoutes = require('./fee.routes');
 const examRoutes = require('./exam.routes');
 const markRoutes = require('./mark.routes');
+const noticeRoutes = require('./notice.routes');
 
 router.get('/health', (req, res) => {
   res.status(200).json({
@@ -30,5 +31,6 @@ router.use('/attendances', attendanceRoutes);
 router.use('/fees', feeRoutes);
 router.use('/exams', examRoutes);
 router.use('/marks', markRoutes);
+router.use('/notices', noticeRoutes);
 
 module.exports = router;
