@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css">
+    <!-- Phosphor Icons for modern icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="ph ph-graduation-cap"></i>
+                EduManage
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="pages/add-student.html">Add Student</a></li>
+                <li><a href="pages/view-students.html">View Students</a></li>
+                <li><a href="#">Attendance</a></li>
+            </ul>
+            <a href="pages/login.html" class="btn-login">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Student Management System</h1>
+            <p>Streamline administrative tasks, track attendance, and manage student records with ease and precision.</p>
+            <div class="hero-actions">
+                <a href="pages/add-student.html" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-header">
+            <h2>Core Features</h2>
+            <p>Everything you need to manage your institution efficiently.</p>
+        </div>
+        
+        <div class="cards-container">
+            <!-- Card 1 -->
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="ph ph-user-plus"></i>
+                </div>
+                <h3>Add Student</h3>
+                <p>Register new students into the system quickly. Capture personal details, academic records, and contact information seamlessly.</p>
+                <a href="pages/add-student.html" class="card-link">Try Now <i class="ph ph-arrow-right"></i></a>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="ph ph-users"></i>
+                </div>
+                <h3>View Students</h3>
+                <p>Access and search the comprehensive student database. Filter by grade, department, or status instantly.</p>
+                <a href="pages/view-students.html" class="card-link">View Database <i class="ph ph-arrow-right"></i></a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="feature-card">
+                <div class="card-icon">
+                    <i class="ph ph-calendar-check"></i>
+                </div>
+                <h3>Attendance</h3>
+                <p>Track daily attendance effortlessly. Generate reports, identify trends, and notify parents about absences automatically.</p>
+                <a href="#" class="card-link">Manage Attendance <i class="ph ph-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <script src="scripts/script.js"></script>
+</body>
+</html>
