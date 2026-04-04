@@ -467,3 +467,57 @@ input { font-family: var(--font-family); }
   margin-top: 2rem;
   font-weight: 500;
 }
+
+/* =========================================
+   SHARED STUDENT PAGE UTILITIES
+   Used across StudentDashboard, Attendance,
+   Marksheet, FeeStatus pages
+   ========================================= */
+
+.page-header {
+  background: linear-gradient(135deg, #2c3e50, #3d5a73);
+  color: #fff;
+  padding: 1.75rem 2.5rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(44, 62, 80, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-header h1 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+.page-header p  { margin: 0.25rem 0 0; opacity: 0.7; font-size: 0.9rem; }
+
+.table-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  border: 1px solid #dfe6e9;
+  overflow: hidden;
+}
+
+.table-card-header {
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid #ecf0f1;
+  font-weight: 700;
+  color: #2c3e50;
+  font-size: 1rem;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: #95a5a6;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #95a5a6;
+  font-size: 0.95rem;
+}
+
