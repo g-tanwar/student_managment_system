@@ -1,38 +1,42 @@
 # Student Management System
 
-A web-based Student Task Management System built using Python, MySQL, and HTML/CSS/JS. This system allows administrators to manage students, courses, attendance, and marks efficiently.
+A web-based Student Task Management System built using Node.js, MongoDB, and HTML/CSS/JS. This system allows administrators to manage students, teachers, attendance, marks, fees and notices efficiently.
 
 ---
 
 ## 🚀 Features
 
+- JWT Based Authentication (Admin/Teacher roles)
 - Add / Update / Delete Students
-- Course Assignment
-- Attendance Tracking
-- Marks Management
-- Report Generation
+- Teacher Management
+- Class and Section Management
+- Attendance Tracking (Single + Bulk)
+- Marks Management with Exam Scheduling
+- Fee Management with Payment History
+- Notice Board
+- Role Based Access Control (RBAC)
 
 ---
 
 ## 🏗️ Tech Stack
 
-| Layer     | Technology        |
-|-----------|-------------------|
-| Frontend  | HTML, CSS, JS     |
-| Backend   | Python (Flask)    |
-| Database  | MySQL             |
+| Layer     | Technology           |
+|-----------|----------------------|
+| Frontend  | HTML, CSS, JS        |
+| Backend   | Node.js (Express.js) |
+| Database  | MongoDB              |
+| Auth      | JWT                  |
+| Validation| Joi                  |
 
 ---
 
 ## 👥 Team Members & Contributions
 
-| Name         | Role                        |
-|--------------|-----------------------------|
-| Gourav Tanwar| Backend Developer           |
-| Kashika Agarwal | Docs + UML + Testing    |
-| Member 3     | Database Designer           |
-| Member 4     | Frontend Developer          |
-| Member 5     | System Design               |
+| Name            | Role                  |
+|-----------------|-----------------------|
+| Gourav Tanwar   | Backend Developer     |
+| Kashika Agarwal | Docs + UML + Testing  |
+| Shrijan Sanidhya| Frontend Developer    |
 
 ---
 
@@ -40,11 +44,21 @@ A web-based Student Task Management System built using Python, MySQL, and HTML/C
 
 student_managment_system/
 ├── backend/
-│   └── app.py
-├── database/
-│   └── schema.sql
+│   └── src/
+│       ├── config/
+│       ├── controllers/
+│       ├── middlewares/
+│       ├── models/
+│       ├── routes/
+│       ├── services/
+│       ├── utils/
+│       └── validations/
 ├── diagrams/
-│   └── class-diagram.txt
+│   ├── class-diagram.txt
+│   ├── er-diagram.txt
+│   ├── sequence-diagram.txt
+│   ├── use-case.txt
+│   └── diagram.txt
 ├── docs/
 │   ├── report.md
 │   └── test-cases.md
@@ -59,12 +73,15 @@ student_managment_system/
 git clone https://github.com/g-tanwar/student_managment_system.git
 
 2. Install dependencies
-pip install flask mysql-connector-python
+npm install
 
-3. Run the backend
-python backend/app.py
+3. Setup environment variables
+cp .env.example .env
 
-4. Open frontend/index.html in browser
+4. Run the backend
+node src/server.js
+
+5. Open frontend/index.html in browser
 
 ---
 

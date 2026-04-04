@@ -5,26 +5,81 @@ USE CASE DIAGRAM — Student Management System
 ACTORS:
 - Admin
 - Teacher
-- Student
+- Student (future scope)
 
-+--------------------------------------------------+
-|           Student Management System              |
-|                                                  |
-|  Admin:                                          |
-|  [Admin] ---> (Add Student)                      |
-|  [Admin] ---> (Delete Student)                   |
-|  [Admin] ---> (Update Student)                   |
-|  [Admin] ---> (Assign Course)                    |
-|  [Admin] ---> (Generate Report)                  |
-|                                                  |
-|  Teacher:                                        |
-|  [Teacher] ---> (Mark Attendance)                |
-|  [Teacher] ---> (Upload Marks)                   |
-|  [Teacher] ---> (View Students)                  |
-|                                                  |
-|  Student:                                        |
-|  [Student] ---> (View Attendance)                |
-|  [Student] ---> (View Marks)                     |
-|  [Student] ---> (View Course)                    |
-|                                                  |
-+--------------------------------------------------+
++------------------------------------------------------------------+
+|                  Student Management System                        |
+|                                                                   |
+|  AUTH:                                                            |
+|  [Admin]   ---> (Login)                                           |
+|  [Admin]   ---> (Get Profile)                                     |
+|  [Admin]   ---> (Seed Default Admin)                              |
+|                                                                   |
+|  STUDENT MANAGEMENT: (Admin only)                                 |
+|  [Admin]   ---> (Add Student)                                     |
+|  [Admin]   ---> (View All Students)                               |
+|  [Admin]   ---> (View Single Student)                             |
+|  [Admin]   ---> (Update Student)                                  |
+|  [Admin]   ---> (Archive/Delete Student)                          |
+|                                                                   |
+|  TEACHER MANAGEMENT: (Admin only)                                 |
+|  [Admin]   ---> (Add Teacher)                                     |
+|  [Admin]   ---> (View All Teachers)                               |
+|  [Admin]   ---> (Update Teacher)                                  |
+|  [Admin]   ---> (Deactivate Teacher)                              |
+|                                                                   |
+|  CLASS & SECTION: (Admin only)                                    |
+|  [Admin]   ---> (Create Class)                                    |
+|  [Admin]   ---> (Create Section)                                  |
+|  [Admin]   ---> (Update/Archive Class)                            |
+|  [Admin]   ---> (Update/Archive Section)                          |
+|                                                                   |
+|  SUBJECT: (Admin only)                                            |
+|  [Admin]   ---> (Create Subject)                                  |
+|  [Admin]   ---> (Assign Teacher to Subject)                       |
+|  [Admin]   ---> (Update/Archive Subject)                          |
+|                                                                   |
+|  ATTENDANCE: (Admin + Teacher)                                    |
+|  [Admin]   ---> (Mark Single Attendance)                          |
+|  [Teacher] ---> (Mark Single Attendance)                          |
+|  [Admin]   ---> (Mark Bulk Attendance)                            |
+|  [Teacher] ---> (Mark Bulk Attendance)                            |
+|  [Admin]   ---> (View Daily Sheet)                                |
+|  [Teacher] ---> (View Daily Sheet)                                |
+|  [Admin]   ---> (View Student Attendance Report)                  |
+|  [Teacher] ---> (View Student Attendance Report)                  |
+|  [Admin]   ---> (Update Attendance Status)                        |
+|  [Teacher] ---> (Update Attendance Status)                        |
+|                                                                   |
+|  EXAM MANAGEMENT: (Admin + Teacher)                               |
+|  [Admin]   ---> (Create Exam)                                     |
+|  [Admin]   ---> (Update Exam)                                     |
+|  [Admin]   ---> (Delete Exam)                                     |
+|  [Admin]   ---> (View Exams)                                      |
+|  [Teacher] ---> (View Exams)                                      |
+|                                                                   |
+|  MARKS: (Admin + Teacher)                                         |
+|  [Admin]   ---> (Submit Single Mark)                              |
+|  [Teacher] ---> (Submit Single Mark)                              |
+|  [Admin]   ---> (Submit Bulk Marks)                               |
+|  [Teacher] ---> (Submit Bulk Marks)                               |
+|  [Admin]   ---> (View Student Marksheet)                          |
+|  [Teacher] ---> (View Student Marksheet)                          |
+|  [Admin]   ---> (View Class Ranking)                              |
+|  [Teacher] ---> (View Class Ranking)                              |
+|                                                                   |
+|  FEE MANAGEMENT: (Admin only)                                     |
+|  [Admin]   ---> (Assign Fee to Student)                           |
+|  [Admin]   ---> (Assign Fee to Entire Class)                      |
+|  [Admin]   ---> (Record Payment)                                  |
+|  [Admin]   ---> (View Fee Invoices)                               |
+|  [Admin]   ---> (Generate Defaulter Report)                       |
+|                                                                   |
+|  NOTICE BOARD: (Admin + Teacher)                                  |
+|  [Admin]   ---> (Create Notice)                                   |
+|  [Admin]   ---> (Update Notice)                                   |
+|  [Admin]   ---> (Delete Notice)                                   |
+|  [Admin]   ---> (View Notices)                                    |
+|  [Teacher] ---> (View Notices)                                    |
+|                                                                   |
++------------------------------------------------------------------+

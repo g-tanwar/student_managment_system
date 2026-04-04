@@ -1,42 +1,117 @@
 ===========================================
-SEQUENCE DIAGRAM — Add Student Flow
+SEQUENCE DIAGRAM 1 — Admin Login Flow
+===========================================
+
+Admin          Frontend        Backend         Database
+  |                |               |               |
+  |  POST /login   |               |               |
+  |  email+password|               |               |
+  |--------------->|               |               |
+  |                | POST /api/v1  |               |
+  |                | /auth/login   |               |
+  |                |-------------->|               |
+  |                |               | findOne(email)|
+  |                |               |+password      |
+  |                |               |-------------->|
+  |                |               |  User Object  |
+  |                |               |<--------------|
+  |                |               | comparePassword|
+  |                |               | generateToken |
+  |                |  JWT Token    |               |
+  |                |<--------------|               |
+  |  200 OK +Token |               |               |
+  |<---------------|               |               |
+
+===========================================
+SEQUENCE DIAGRAM 2 — Add Student Flow
 ===========================================
 
 Admin          Frontend        Backend         Database
   |                |               |               |
   |  Fill Form     |               |               |
   |--------------->|               |               |
-  |                |  POST /student|               |
+  |                | POST /api/v1  |               |
+  |                | /students     |               |
+  |                | +JWT Token    |               |
   |                |-------------->|               |
-  |                |               | INSERT query  |
+  |                |               | protect()     |
+  |                |               | authorize()   |
+  |                |               | validate()    |
+  |                |               | findOne       |
+  |                |               | (enrollmentNo)|
   |                |               |-------------->|
-  |                |               |               |
-  |                |               |  Success      |
+  |                |               | null (unique) |
   |                |               |<--------------|
-  |                |  200 OK       |               |
+  |                |               | Student.create|
+  |                |               |-------------->|
+  |                |               | Student Object|
+  |                |               |<--------------|
+  |                |  201 Created  |               |
   |                |<--------------|               |
-  |  Student Added |               |               |
+  |  Success msg   |               |               |
   |<---------------|               |               |
-  |                |               |               |
 
 ===========================================
-SEQUENCE DIAGRAM — Mark Attendance Flow
+SEQUENCE DIAGRAM 3 — Mark Bulk Attendance
 ===========================================
 
 Teacher        Frontend        Backend         Database
   |                |               |               |
-  |  Select Student|               |               |
+  |  Select Class  |               |               |
+  |  + Students    |               |               |
   |--------------->|               |               |
-  |                | POST /attend  |               |
+  |                | POST /api/v1  |               |
+  |                | /attendances  |               |
+  |                | /bulk +JWT    |               |
   |                |-------------->|               |
-  |                |               | INSERT query  |
+  |                |               | protect()     |
+  |                |               | authorize     |
+  |                |               | (ADMIN/TEACHER)|
+  |                |               | validate()    |
+  |                |               | Check duplicates|
   |                |               |-------------->|
+  |                |               | No duplicates |
+  |                |               |<--------------|
+  |                |               | insertMany()  |
+  |                |               |-------------->|
+  |                |               | Records saved |
+  |                |               |<--------------|
+  |                |  201 Created  |               |
+  |                |<--------------|               |
+  |  Attendance    |               |               |
+  |  Marked!       |               |               |
+  |<---------------|               |               |
+
+===========================================
+SEQUENCE DIAGRAM 4 — Record Fee Payment
+===========================================
+
+Admin          Frontend        Backend         Database
   |                |               |               |
-  |                |               |  Success      |
+  |  Enter Payment |               |               |
+  |  Details       |               |               |
+  |--------------->|               |               |
+  |                | POST /api/v1  |               |
+  |                | /fees/:id/pay |               |
+  |                | +JWT Token    |               |
+  |                |-------------->|               |
+  |                |               | protect()     |
+  |                |               | authorize(ADMIN)|
+  |                |               | findById(fee) |
+  |                |               |-------------->|
+  |                |               | Fee Object    |
+  |                |               |<--------------|
+  |                |               | Check status  |
+  |                |               | != PAID       |
+  |                |               | Validate amount|
+  |                |               | Update paidAmount|
+  |                |               | Push payment  |
+  |                |               | history       |
+  |                |               | fee.save()    |
+  |                |               |-------------->|
+  |                |               | Updated Fee   |
   |                |               |<--------------|
   |                |  200 OK       |               |
   |                |<--------------|               |
-  |  Attendance    |               |               |
-  |  Marked        |               |               |
+  |  Payment Logged|               |               |
   |<---------------|               |               |
-  

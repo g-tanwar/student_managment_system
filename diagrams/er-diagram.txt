@@ -3,47 +3,107 @@ ER DIAGRAM — Student Management System
 ===========================================
 
 +------------------+         +------------------+
-|    STUDENT       |         |     COURSE       |
+|      USER        |         |    TEACHER       |
 +------------------+         +------------------+
-| PK roll_no       |         | PK course_id     |
-|    name          |         |    course_name   |
-|    email         |         |    credits       |
-|    phone         |         |    teacher_id FK |
+| PK _id           |<--------| FK userId        |
+|    email (unique)|         | PK _id           |
+|    password      |         |    employeeId    |
+|    role          |         |    firstName     |
+|    isActive      |         |    lastName      |
++------------------+         |    gender        |
+                             |    dob           |
+                             |    contactNumber |
+                             |    qualifications|
+                             |    isActive      |
+                             +------------------+
+                                     |
+                                     | TEACHES (many)
+                                     |
 +------------------+         +------------------+
-        |                            |
-        | ENROLLS IN                 |
-        |----------------------------|
+|     CLASS        |         |    SUBJECT       |
++------------------+         +------------------+
+| PK _id           |<--------| FK classId       |
+|    className     |         | PK _id           |
+|    classCode     |         |    subjectName   |
+|    status        |         |    subjectCode   |
++------------------+         | FK teacherId     |
+        |                    |    status        |
+        | HAS (many)         +------------------+
         |
 +------------------+
-|   ENROLLMENT     |
+|    SECTION       |
 +------------------+
-| PK enroll_id     |
-| FK roll_no       |
-| FK course_id     |
-|    enroll_date   |
+| PK _id           |
+| FK classId       |
+|    sectionName   |
+|    status        |
 +------------------+
+        |
+        | CONTAINS (many)
+        |
++------------------+
+|    STUDENT       |
++------------------+
+| PK _id           |
+|    enrollmentNo  |
+|    firstName     |
+|    lastName      |
+|    gender        |
+|    dob           |
+|    parentName    |
+|    parentContact |
+| FK classId       |
+| FK sectionId     |
+|    status        |
+|    isActive      |
++------------------+
+        |
+        |__________________________|___________________|
+        |                          |                   |
+        | HAS (many)               | HAS (many)        | HAS (many)
+        |                          |                   |
++------------------+    +------------------+    +------------------+
+|   ATTENDANCE     |    |      MARK        |    |      FEE         |
++------------------+    +------------------+    +------------------+
+| PK _id           |    | PK _id           |    | PK _id           |
+| FK studentId     |    | FK studentId     |    | FK studentId     |
+| FK classId       |    | FK examId        |    | FK classId       |
+| FK sectionId     |    | FK subjectId     |    |    feeType       |
+|    date          |    |    obtainedMarks |    |    academicYear  |
+|    status        |    |    totalMarks    |    |    totalAmount   |
+|    PRESENT/      |    |    remarks       |    |    paidAmount    |
+|    ABSENT/LATE   |    +------------------+    |    dueDate       |
+| FK markedBy      |                            |    status        |
++------------------+                            |    payments[]    |
+                                                +------------------+
 
 +------------------+         +------------------+
-|   ATTENDANCE     |         |     MARKS        |
+|      EXAM        |         |     NOTICE       |
 +------------------+         +------------------+
-| PK attend_id     |         | PK mark_id       |
-| FK roll_no       |         | FK roll_no       |
-|    date          |         | FK course_id     |
-|    status        |         |    subject       |
-+------------------+         |    marks         |
-                             +------------------+
-
-+------------------+
-|    TEACHER       |
-+------------------+
-| PK teacher_id    |
-|    name          |
-|    email         |
-|    subject       |
+| PK _id           |         | PK _id           |
+|    examName      |         |    title         |
+|    academicYear  |         |    description   |
+| FK classId       |         |    audience      |
+| FK sectionId     |         |    publishDate   |
+|    schedule[]    |         |    expiryDate    |
+|    FK subjectId  |         |    status        |
+|    examDate      |         | FK createdBy     |
+|    maxMarks      |         +------------------+
+|    passingMarks  |
+|    status        |
 +------------------+
 
 RELATIONSHIPS:
-- Student ENROLLS IN Course (Many to Many)
-- Student HAS Attendance (One to Many)
-- Student HAS Marks (One to Many)
-- Teacher TEACHES Course (One to Many)
+- User (1) ---------> (1) Teacher      [userId]
+- Class (1) ---------> (many) Section
+- Class (1) ---------> (many) Subject
+- Class (1) ---------> (many) Student
+- Section (1) -------> (many) Student
+- Teacher (1) -------> (many) Subject  [teacherId]
+- Student (1) -------> (many) Attendance
+- Student (1) -------> (many) Mark
+- Student (1) -------> (many) Fee
+- Exam (1) ----------> (many) Mark
+- Subject (1) -------> (many) Mark
+- User/Admin (1) ----> (many) Notice   [createdBy]
+- User (1) ----------> (many) Attendance [markedBy]

@@ -2,44 +2,100 @@
 CLASS DIAGRAM — Student Management System
 ===========================================
 
-+------------------+
-|      Person      |
-+------------------+
-| - name: String   |
-| - email: String  |
-| - phone: String  |
-+------------------+
-| + getDetails()   |
-| + setDetails()   |
-+------------------+
-        |
-        | (Inheritance)
-        |
-+------------------+        +------------------+
-|     Student      |        |     Teacher      |
-+------------------+        +------------------+
-| - rollNo: String |        | - teacherId: String|
-| - course: String |        | - subject: String |
-| - marks: int     |        +------------------+
-+------------------+        | + markAttendance()|
-| + addStudent()   |        | + uploadMarks()  |
-| + deleteStudent()|        +------------------+
-| + updateStudent()|
-| + viewStudent()  |
-+------------------+
-        |
-        | (Association)
-        |
-+------------------+        +------------------+
-|     Course       |        |   Attendance     |
-+------------------+        +------------------+
-| - courseId: String|       | - date: String   |
-| - courseName: String|     | - status: String |
-| - credits: int   |        | - studentId: String|
-+------------------+        +------------------+
-| + assignCourse() |        | + markPresent()  |
-| + removeCourse() |        | + markAbsent()   |
-+------------------+        | + getReport()    |
-                            +------------------+
++------------------+       +------------------+
+|      User        |       |    Teacher        |
++------------------+       +------------------+
+| - email: String  |       | - employeeId: String|
+| - password: String|      | - firstName: String|
+| - role: ENUM     |       | - lastName: String |
+|   ADMIN/TEACHER/ |       | - gender: ENUM    |
+|   STUDENT        |       | - dob: Date       |
+| - isActive: Bool |       | - contactNumber   |
++------------------+       | - qualifications[]|
+| + comparePassword|       | - subjectsHandled[]|
+| + generateToken  |       | - isActive: Bool  |
++------------------+       +------------------+
+        |                          |
+        | 1                        | 1
+        |__________________________|
+                   userId (ref)
 
-                            
++------------------+       +------------------+
+|    Student       |       |     Class        |
++------------------+       +------------------+
+| - enrollmentNo   |       | - className      |
+| - firstName      |       | - classCode      |
+| - lastName       |       | - status: ENUM   |
+| - gender: ENUM   |       |   ACTIVE/INACTIVE|
+| - dob: Date      |       +------------------+
+| - parentName     |       | + createClass()  |
+| - parentContact  |       | + updateClass()  |
+| - classId (ref)  |       +------------------+
+| - sectionId (ref)|
+| - status: ENUM   |       +------------------+
+|   ACTIVE/        |       |    Section       |
+|   SUSPENDED/     |       +------------------+
+|   ALUMNI         |       | - sectionName    |
+| - isActive: Bool |       | - classId (ref)  |
++------------------+       | - status: ENUM   |
+                           +------------------+
+
++------------------+       +------------------+
+|    Subject       |       |     Exam         |
++------------------+       +------------------+
+| - subjectName    |       | - examName       |
+| - subjectCode    |       | - academicYear   |
+| - classId (ref)  |       | - classId (ref)  |
+| - teacherId (ref)|       | - sectionId (ref)|
+| - status: ENUM   |       | - schedule[]     |
++------------------+       |   subjectId      |
+                           |   examDate       |
+                           |   maxMarks       |
+                           |   passingMarks   |
+                           | - status: ENUM   |
+                           |   SCHEDULED/     |
+                           |   ONGOING/       |
+                           |   COMPLETED/     |
+                           |   PUBLISHED      |
+                           +------------------+
+
++------------------+       +------------------+
+|   Attendance     |       |      Mark        |
++------------------+       +------------------+
+| - studentId (ref)|       | - studentId (ref)|
+| - classId (ref)  |       | - examId (ref)   |
+| - sectionId (ref)|       | - subjectId (ref)|
+| - date: Date     |       | - obtainedMarks  |
+| - status: ENUM   |       | - totalMarks     |
+|   PRESENT/ABSENT/|       | - remarks        |
+|   LATE           |       +------------------+
+| - markedBy (ref) |
++------------------+       +------------------+
+                           |      Fee         |
++------------------+       +------------------+
+|    Notice        |       | - studentId (ref)|
++------------------+       | - classId (ref)  |
+| - title          |       | - feeType        |
+| - description    |       | - academicYear   |
+| - audience: ENUM |       | - totalAmount    |
+|   ALL/STUDENTS/  |       | - paidAmount     |
+|   TEACHERS       |       | - dueDate        |
+| - publishDate    |       | - status: ENUM   |
+| - expiryDate     |       |   UNPAID/        |
+| - status: ENUM   |       |   PARTIALLY_PAID/|
+| - createdBy (ref)|       |   PAID           |
++------------------+       | - payments[]     |
+                           +------------------+
+
+RELATIONSHIPS:
+- User (1) -----> (1) Teacher  [userId ref]
+- Student (many) --> (1) Class
+- Student (many) --> (1) Section
+- Section (many) --> (1) Class
+- Subject (many) --> (1) Class
+- Subject (many) --> (1) Teacher
+- Attendance (many) --> (1) Student
+- Mark (many) --> (1) Student
+- Mark (many) --> (1) Exam
+- Fee (many) --> (1) Student
+- Exam (many) --> (1) Class

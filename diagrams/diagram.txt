@@ -2,40 +2,100 @@
 SYSTEM ARCHITECTURE — Student Management System
 ===========================================
 
+TECH STACK:
+- Frontend  : HTML + CSS + JavaScript
+- Backend   : Node.js + Express.js
+- Database  : MongoDB (Mongoose ODM)
+- Auth      : JWT (JSON Web Tokens)
+- Validation: Joi
+
+===========================================
 3-TIER ARCHITECTURE:
+===========================================
 
 +--------------------------------------------------+
 |              TIER 1: FRONTEND                    |
 |                                                  |
 |   HTML + CSS + JavaScript                        |
-|   - Add Student Form                             |
-|   - View Students Page                           |
+|   - Login Page                                   |
+|   - Student Management Dashboard                 |
 |   - Attendance Page                              |
 |   - Marks Page                                   |
-|   - Dashboard                                    |
+|   - Fee Management Page                          |
+|   - Notice Board                                 |
 +--------------------------------------------------+
                     |
-                    | HTTP Requests
+                    | HTTP Requests + JWT Token
                     |
 +--------------------------------------------------+
-|              TIER 2: BACKEND                     |
+|              TIER 2: BACKEND (Node.js)           |
 |                                                  |
-|   Python (Flask)                                 |
-|   - Student Controller                           |
-|   - Course Controller                            |
-|   - Attendance Controller                        |
-|   - Marks Controller                             |
-+--------------------------------------------------+
-                    |
-                    | SQL Queries
-                    |
-+--------------------------------------------------+
-|              TIER 3: DATABASE                    |
+|   MIDDLEWARES:                                   |
+|   - auth.middleware (JWT protect + authorize)    |
+|   - validate.middleware (Joi validation)         |
+|   - error.middleware (404 + global handler)      |
 |                                                  |
-|   MySQL                                          |
-|   - Students Table                               |
-|   - Courses Table                                |
-|   - Enrollment Table                             |
-|   - Attendance Table                             |
-|   - Marks Table                                  |
+|   ROUTES (/api/v1):                              |
+|   - /auth        - /students   - /teachers       |
+|   - /classes     - /sections   - /subjects       |
+|   - /attendances - /exams      - /marks          |
+|   - /fees        - /notices                      |
+|                                                  |
+|   CONTROLLERS:                                   |
+|   - authController      - studentController      |
+|   - teacherController   - classController        |
+|   - sectionController   - subjectController      |
+|   - attendanceController- examController         |
+|   - markController      - feeController          |
+|   - noticeController                             |
+|                                                  |
+|   SERVICES (Business Logic):                     |
+|   - authService         - studentService         |
+|   - teacherService      - classService           |
+|   - sectionService      - subjectService         |
+|   - attendanceService   - examService            |
+|   - markService         - feeService             |
+|   - noticeService                                |
 +--------------------------------------------------+
+                    |
+                    | Mongoose Queries
+                    |
++--------------------------------------------------+
+|              TIER 3: DATABASE (MongoDB)          |
+|                                                  |
+|   MODELS/COLLECTIONS:                            |
+|   - User        - Teacher     - Student          |
+|   - Class       - Section     - Subject          |
+|   - Attendance  - Exam        - Mark             |
+|   - Fee         - Notice                         |
+|                                                  |
+|   KEY INDEXES:                                   |
+|   - Attendance: {studentId, date} unique         |
+|   - Mark: {studentId, examId, subjectId} unique  |
+|   - Section: {classId, sectionName} unique       |
++--------------------------------------------------+
+
+===========================================
+MVC PATTERN:
+===========================================
+
+Request --> Route --> Middleware --> Controller --> Service --> Model --> MongoDB
+                                        |
+                                    Response <-------------------------------+
+
+===========================================
+ROLE BASED ACCESS CONTROL (RBAC):
+===========================================
+
+| Feature          | ADMIN | TEACHER | STUDENT |
+|------------------|-------|---------|---------|
+| Student CRUD     |  YES  |   NO    |   NO    |
+| Teacher CRUD     |  YES  |   NO    |   NO    |
+| Class/Section    |  YES  |   NO    |   NO    |
+| Attendance       |  YES  |   YES   |   NO    |
+| Marks            |  YES  |   YES   |   NO    |
+| Exam (Create)    |  YES  |   NO    |   NO    |
+| Exam (View)      |  YES  |   YES   |   NO    |
+| Fee Management   |  YES  |   NO    |   NO    |
+| Notice (Create)  |  YES  |   NO    |   NO    |
+| Notice (View)    |  YES  |   YES   |   NO    |
