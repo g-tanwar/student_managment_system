@@ -1,0 +1,55 @@
+const User = require('../models/User');
+const ApiError = require('../utils/ApiError');
+const { generateToken } = require('../utils/jwtUtils');
+
+const loginAdmin = async (email, password) => {
+  // Try to find the user. Use +password to force selection since it's hidden by default
+  const user = await User.findOne({ email }).select('+password');
+  
+  if (!user || user.role !== 'ADMIN') {
+    throw new ApiError(401, 'Invalid credentials setup or unauthorized');
+  }
+  
+  if (!user.isActive) {
+    throw new ApiError(403, 'This account has been deactivated');
+  }
+
+  // Compare hash
+  const isMatch = await user.comparePassword(password);
+  if (!isMatch) {
+    throw new ApiError(401, 'Invalid credentials setup or password');
+  }
+
+  // Build clean session
+  const token = generateToken(user._id, user.role);
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  return { user: userResponse, token };
+};
+
+const getAdminProfile = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) throw new ApiError(404, 'User profile could not be found');
+  return user;
+};
+
+const seedDefaultAdmin = async () => {
+  const adminExists = await User.findOne({ role: 'ADMIN' });
+  if (adminExists) {
+    throw new ApiError(400, 'Seed rejected: An admin account already exists');
+  }
+
+  const admin = await User.create({
+    email: 'admin@school.com',
+    password: 'password123', // Hardcoded default, expected to be changed post-login
+    role: 'ADMIN',
+  });
+
+  const response = admin.toObject();
+  delete response.password;
+  
+  return response;
+};
+
+module.exports = { loginAdmin, getAdminProfile, seedDefaultAdmin };
