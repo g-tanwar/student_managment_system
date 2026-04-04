@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth.routes');
+const studentRoutes = require('./student.routes');
+const teacherRoutes = require('./teacher.routes');
+const classRoutes = require('./class.routes');
+const sectionRoutes = require('./section.routes');
+const subjectRoutes = require('./subject.routes');
 
 router.get('/health', (req, res) => {
   res.status(200).json({
@@ -12,5 +17,10 @@ router.get('/health', (req, res) => {
 
 // Mounted application routes
 router.use('/auth', authRoutes);
+router.use('/students', studentRoutes);
+router.use('/teachers', teacherRoutes);
+router.use('/classes', classRoutes);
+router.use('/sections', sectionRoutes);
+router.use('/subjects', subjectRoutes);
 
 module.exports = router;
