@@ -1,0 +1,30 @@
+===========================================
+USE CASE DIAGRAM — Student Management System
+===========================================
+
+ACTORS:
+- Admin
+- Teacher
+- Student
+
++--------------------------------------------------+
+|           Student Management System              |
+|                                                  |
+|  Admin:                                          |
+|  [Admin] ---> (Add Student)                      |
+|  [Admin] ---> (Delete Student)                   |
+|  [Admin] ---> (Update Student)                   |
+|  [Admin] ---> (Assign Course)                    |
+|  [Admin] ---> (Generate Report)                  |
+|                                                  |
+|  Teacher:                                        |
+|  [Teacher] ---> (Mark Attendance)                |
+|  [Teacher] ---> (Upload Marks)                   |
+|  [Teacher] ---> (View Students)                  |
+|                                                  |
+|  Student:                                        |
+|  [Student] ---> (View Attendance)                |
+|  [Student] ---> (View Marks)                     |
+|  [Student] ---> (View Course)                    |
+|                                                  |
++--------------------------------------------------+

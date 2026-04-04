@@ -1,0 +1,49 @@
+===========================================
+ER DIAGRAM — Student Management System
+===========================================
+
++------------------+         +------------------+
+|    STUDENT       |         |     COURSE       |
++------------------+         +------------------+
+| PK roll_no       |         | PK course_id     |
+|    name          |         |    course_name   |
+|    email         |         |    credits       |
+|    phone         |         |    teacher_id FK |
++------------------+         +------------------+
+        |                            |
+        | ENROLLS IN                 |
+        |----------------------------|
+        |
++------------------+
+|   ENROLLMENT     |
++------------------+
+| PK enroll_id     |
+| FK roll_no       |
+| FK course_id     |
+|    enroll_date   |
++------------------+
+
++------------------+         +------------------+
+|   ATTENDANCE     |         |     MARKS        |
++------------------+         +------------------+
+| PK attend_id     |         | PK mark_id       |
+| FK roll_no       |         | FK roll_no       |
+|    date          |         | FK course_id     |
+|    status        |         |    subject       |
++------------------+         |    marks         |
+                             +------------------+
+
++------------------+
+|    TEACHER       |
++------------------+
+| PK teacher_id    |
+|    name          |
+|    email         |
+|    subject       |
++------------------+
+
+RELATIONSHIPS:
+- Student ENROLLS IN Course (Many to Many)
+- Student HAS Attendance (One to Many)
+- Student HAS Marks (One to Many)
+- Teacher TEACHES Course (One to Many)

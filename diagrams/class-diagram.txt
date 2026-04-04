@@ -1,0 +1,45 @@
+===========================================
+CLASS DIAGRAM — Student Management System
+===========================================
+
++------------------+
+|      Person      |
++------------------+
+| - name: String   |
+| - email: String  |
+| - phone: String  |
++------------------+
+| + getDetails()   |
+| + setDetails()   |
++------------------+
+        |
+        | (Inheritance)
+        |
++------------------+        +------------------+
+|     Student      |        |     Teacher      |
++------------------+        +------------------+
+| - rollNo: String |        | - teacherId: String|
+| - course: String |        | - subject: String |
+| - marks: int     |        +------------------+
++------------------+        | + markAttendance()|
+| + addStudent()   |        | + uploadMarks()  |
+| + deleteStudent()|        +------------------+
+| + updateStudent()|
+| + viewStudent()  |
++------------------+
+        |
+        | (Association)
+        |
++------------------+        +------------------+
+|     Course       |        |   Attendance     |
++------------------+        +------------------+
+| - courseId: String|       | - date: String   |
+| - courseName: String|     | - status: String |
+| - credits: int   |        | - studentId: String|
++------------------+        +------------------+
+| + assignCourse() |        | + markPresent()  |
+| + removeCourse() |        | + markAbsent()   |
++------------------+        | + getReport()    |
+                            +------------------+
+
+                            
