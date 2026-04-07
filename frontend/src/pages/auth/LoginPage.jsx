@@ -96,14 +96,13 @@ const LoginPage = () => {
               )}
             </button>
 
-            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-              <button 
-                type="button" 
+            <div className="login-footer">
+              <button
+                type="button"
                 onClick={() => {
                   setIsLoginMode(!isLoginMode);
                   setError('');
-                }} 
-                style={{ background: 'none', color: 'var(--primary-color)', fontWeight: '600', fontSize: '14px', padding: '10px' }}
+                }}
               >
                 {isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
               </button>
@@ -111,7 +110,7 @@ const LoginPage = () => {
           </form>
         </div>
         <p className="login-footer">
-          &copy; 2026 Student Management System.
+          &copy; 2026 EduPortal — Student Management System
         </p>
       </div>
     </div>
