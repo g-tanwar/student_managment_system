@@ -4,69 +4,46 @@ import Layout from './layout/Layout';
 import LoginPage from './pages/auth/LoginPage';
 import LoadingSpinner from './components/LoadingSpinner';
 
-// Admin/Teacher pages
-import Dashboard from './pages/admin/Dashboard';
-import Students from './pages/admin/StudentManagement';
-import Attendance from './pages/admin/BulkAttendance';
-import Fees from './pages/admin/Fees';
-import Exams from './pages/admin/Exams';
-import Notices from './pages/common/Notices';
-
-// Student pages
+// Unified SaaS Pages
 import StudentDashboard from './pages/student/StudentDashboard';
 import MyAttendance from './pages/student/MyAttendance';
-import MyMarksheet from './pages/student/MyMarksheet';
 import FeeStatus from './pages/student/FeeStatus';
+import Notes from './pages/student/Notes';
+import Pomodoro from './pages/student/Pomodoro';
+import Schedule from './pages/student/Schedule';
+import Goals from './pages/student/Goals';
+import Profile from './pages/student/Profile';
 
 function App() {
   const { user, loading } = useAuth();
-
+  
   if (loading) {
     return <LoadingSpinner />;
   }
-
-  const isAdminOrTeacher = user?.role === 'ADMIN' || user?.role === 'TEACHER';
-  const isStudent = user?.role === 'STUDENT';
 
   return (
     <Routes>
       {/* Public Route */}
       <Route 
         path="/login" 
-        element={!user ? <LoginPage /> : <Navigate to={isStudent ? '/portal/dashboard' : '/dashboard'} />} 
+        element={!user ? <LoginPage /> : <Navigate to="/dashboard" />} 
       />
 
       {/* Protected Layout Routes */}
       <Route element={user ? <Layout /> : <Navigate to="/login" />}>
         
-        {/* Admin/Teacher Routes */}
-        {isAdminOrTeacher && (
-          <>
-            <Route path="/dashboard"  element={<Dashboard />} />
-            <Route path="/students"   element={<Students />} />
-            <Route path="/attendance" element={<Attendance />} />
-            <Route path="/fees"       element={<Fees />} />
-            <Route path="/exams"      element={<Exams />} />
-            <Route path="/notices"    element={<Notices />} />
-          </>
-        )}
-
-        {/* Student Routes */}
-        {isStudent && (
-          <>
-            <Route path="/portal/dashboard"  element={<StudentDashboard />} />
-            <Route path="/portal/attendance" element={<MyAttendance />} />
-            <Route path="/portal/marks"      element={<MyMarksheet />} />
-            <Route path="/portal/fees"       element={<FeeStatus />} />
-            <Route path="/portal/notices"    element={<Notices />} />
-          </>
-        )}
+        {/* Unified Dashboard Routes */}
+        <Route path="/dashboard"  element={<StudentDashboard />} />
+        <Route path="/attendance" element={<MyAttendance />} />
+        <Route path="/fees"       element={<FeeStatus />} />
+        <Route path="/notes"      element={<Notes />} />
+        <Route path="/pomodoro"   element={<Pomodoro />} />
+        <Route path="/schedule"   element={<Schedule />} />
+        <Route path="/goals"      element={<Goals />} />
+        <Route path="/profile"    element={<Profile />} />
 
         {/* Root redirect */}
-        <Route 
-          path="/" 
-          element={<Navigate to={isStudent ? '/portal/dashboard' : '/dashboard'} />} 
-        />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
       </Route>
 
       {/* Fallback */}

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { LogIn, Mail, Lock, GraduationCap } from 'lucide-react';
+import { LogIn, Mail, Lock, GraduationCap, UserPlus } from 'lucide-react';
 
 const LoginPage = () => {
+  const [isLoginMode, setIsLoginMode] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, signup } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +16,10 @@ const LoginPage = () => {
     setIsSubmitting(true);
     
     try {
-      const res = await login(email, password);
+      const res = isLoginMode 
+        ? await login(email, password) 
+        : await signup(email, password);
+        
       if (!res.success) {
         setError(res.error);
       }
@@ -37,8 +41,8 @@ const LoginPage = () => {
             <div className="login-icon-box">
               <GraduationCap size={40} />
             </div>
-            <h1>Welcome Back</h1>
-            <p>Sign in to the Portal</p>
+            <h1>{isLoginMode ? 'Welcome Back' : 'Create Account'}</h1>
+            <p>{isLoginMode ? 'Sign in to the Portal' : 'Register for access'}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">
@@ -56,7 +60,7 @@ const LoginPage = () => {
                 <input
                   type="email"
                   required
-                  placeholder="admin@school.com"
+                  placeholder="student@school.com"
                   className="form-input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -84,13 +88,26 @@ const LoginPage = () => {
               disabled={isSubmitting}
               className="btn-primary"
             >
-              {isSubmitting ? 'Verifying...' : (
+              {isSubmitting ? (isLoginMode ? 'Verifying...' : 'Creating...') : (
                 <>
-                  <LogIn size={22} className="btn-icon" />
-                  Sign In
+                  {isLoginMode ? <LogIn size={22} className="btn-icon" /> : <UserPlus size={22} className="btn-icon" />}
+                  {isLoginMode ? 'Sign In' : 'Sign Up'}
                 </>
               )}
             </button>
+
+            <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+              <button 
+                type="button" 
+                onClick={() => {
+                  setIsLoginMode(!isLoginMode);
+                  setError('');
+                }} 
+                style={{ background: 'none', color: 'var(--primary-color)', fontWeight: '600', fontSize: '14px', padding: '10px' }}
+              >
+                {isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              </button>
+            </div>
           </form>
         </div>
         <p className="login-footer">

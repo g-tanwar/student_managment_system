@@ -38,12 +38,20 @@
 .selector-group select:focus,
 .selector-group input:focus {
   outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.bulk-att-table thead {
+  background-color: var(--primary-hover);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .btn-fetch {
-  background-color: #3b82f6; /* Blue */
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 0.6rem 1.2rem;

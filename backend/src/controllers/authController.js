@@ -28,4 +28,14 @@ const seedAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { login, getMe, seedAdmin };
+const signup = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const data = await authService.signupUser(email, password);
+    res.status(201).json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { login, getMe, seedAdmin, signup };

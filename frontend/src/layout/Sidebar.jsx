@@ -1,30 +1,24 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { 
-  LayoutDashboard, Users, ClipboardCheck, Wallet, GraduationCap, 
-  UserCircle, BarChart3, Bell, LogOut 
+  LayoutDashboard, ClipboardCheck, Wallet, FileText, 
+  Timer, Calendar, Target, UserCircle, LogOut, GraduationCap
 } from 'lucide-react';
 
 const Sidebar = () => {
-  const { user, logout } = useAuth();
+  const { logout } = useAuth();
   const location = useLocation();
 
-  const adminLinks = [
+  const links = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Students', path: '/students', icon: Users },
     { name: 'Attendance', path: '/attendance', icon: ClipboardCheck },
     { name: 'Fees', path: '/fees', icon: Wallet },
-    { name: 'Exams', path: '/exams', icon: GraduationCap },
+    { name: 'Notes', path: '/notes', icon: FileText },
+    { name: 'Pomodoro', path: '/pomodoro', icon: Timer },
+    { name: 'Schedule', path: '/schedule', icon: Calendar },
+    { name: 'Goals', path: '/goals', icon: Target },
+    { name: 'Profile', path: '/profile', icon: UserCircle },
   ];
-
-  const studentLinks = [
-    { name: 'My Profile', path: '/portal/dashboard', icon: UserCircle },
-    { name: 'My Attendance', path: '/portal/attendance', icon: ClipboardCheck },
-    { name: 'My Marks', path: '/portal/marks', icon: BarChart3 },
-    { name: 'Notice Board', path: '/portal/notices', icon: Bell },
-  ];
-
-  const links = user?.role === 'ADMIN' || user?.role === 'TEACHER' ? adminLinks : studentLinks;
 
   return (
     <aside className="sidebar">
@@ -43,7 +37,7 @@ const Sidebar = () => {
               to={link.path}
               className={`sidebar-link ${isActive ? 'active' : ''}`}
             >
-              <Icon size={20} />
+              <Icon size={22} />
               <span>{link.name}</span>
             </Link>
           );
@@ -52,7 +46,7 @@ const Sidebar = () => {
       
       <div className="sidebar-footer">
         <button onClick={logout} className="logout-btn">
-          <LogOut size={20} />
+          <LogOut size={22} />
           <span>Logout</span>
         </button>
       </div>

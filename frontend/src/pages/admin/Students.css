@@ -104,6 +104,14 @@
   border-bottom: 1px solid #e2e8f0;
 }
 
+.students-table thead {
+  background-color: var(--primary-hover);
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .admin-table th {
   background-color: #f8fafc;
   color: #475569;

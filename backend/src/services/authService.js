@@ -6,7 +6,7 @@ const loginAdmin = async (email, password) => {
   // Try to find the user. Use +password to force selection since it's hidden by default
   const user = await User.findOne({ email }).select('+password');
   
-  if (!user || user.role !== 'ADMIN') {
+  if (!user) {
     throw new ApiError(401, 'Invalid credentials setup or unauthorized');
   }
   
@@ -52,4 +52,26 @@ const seedDefaultAdmin = async () => {
   return response;
 };
 
-module.exports = { loginAdmin, getAdminProfile, seedDefaultAdmin };
+const signupUser = async (email, password) => {
+  let existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw new ApiError(400, 'User already exists with this email');
+  }
+
+  const user = await User.create({
+    email,
+    password, 
+    role: 'STUDENT',
+    isActive: true,
+  });
+
+  console.log(`[AUTH] New user account created via Signup: ${email}`);
+
+  const token = generateToken(user._id, user.role);
+  const userResponse = user.toObject();
+  delete userResponse.password;
+
+  return { user: userResponse, token };
+};
+
+module.exports = { loginAdmin, getAdminProfile, seedDefaultAdmin, signupUser };
