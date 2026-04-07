@@ -126,7 +126,7 @@ const FeeStatus = () => {
         <div className="fee-bottom-grid">
           {/* Payment History Table */}
           <div className="table-card">
-            <div className="table-card-header">
+            <div className="table-card-header" style={{ borderBottom: 'none', background: 'transparent' }}>
               <History size={18} color="var(--primary-hover)" />
               Payment History
             </div>
@@ -137,36 +137,38 @@ const FeeStatus = () => {
             ) : fees.length === 0 ? (
               <div className="empty-state">No fee records found.</div>
             ) : (
-              <table className="fee-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Fee Type</th>
-                    <th>Year</th>
-                    <th>Total</th>
-                    <th>Paid</th>
-                    <th>Balance</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fees.map((f, i) => (
-                    <tr key={f._id}>
-                      <td>{i + 1}</td>
-                      <td style={{ fontWeight: 700 }}>{f.feeType || '—'}</td>
-                      <td>{f.academicYear || '—'}</td>
-                      <td>{formatCurrency(f.totalAmount || 0)}</td>
-                      <td style={{ color: '#27ae60', fontWeight: 700 }}>{formatCurrency(f.paidAmount || 0)}</td>
-                      <td style={{ color: '#e74c3c', fontWeight: 700 }}>{formatCurrency((f.totalAmount || 0) - (f.paidAmount || 0))}</td>
-                      <td style={{ color: 'var(--text-secondary)' }}>{f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-IN') : '—'}</td>
-                      <td>
-                        <span className={`fee-badge ${f.status?.toLowerCase()}`}>{f.status || 'Pending'}</span>
-                      </td>
+              <div className="fees-table-wrap">
+                <table className="fee-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Fee Type</th>
+                      <th>Year</th>
+                      <th>Total</th>
+                      <th>Paid</th>
+                      <th>Balance</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {fees.map((f, i) => (
+                      <tr key={f._id}>
+                        <td>{i + 1}</td>
+                        <td style={{ fontWeight: 700 }}>{f.feeType || '—'}</td>
+                        <td>{f.academicYear || '—'}</td>
+                        <td>{formatCurrency(f.totalAmount || 0)}</td>
+                        <td style={{ color: '#34D399', fontWeight: 700 }}>{formatCurrency(f.paidAmount || 0)}</td>
+                        <td style={{ color: '#F87171', fontWeight: 700 }}>{formatCurrency((f.totalAmount || 0) - (f.paidAmount || 0))}</td>
+                        <td style={{ color: 'var(--text-secondary)' }}>{f.dueDate ? new Date(f.dueDate).toLocaleDateString('en-IN') : '—'}</td>
+                        <td>
+                          <span className={`fee-badge ${f.status?.toLowerCase()}`}>{f.status || 'Pending'}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
 
