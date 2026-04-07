@@ -1,51 +1,154 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { getMyFees } from '../../services/feeService';
+import { getMyAttendance } from '../../services/attendanceService';
 import {
   Flame, CheckCircle2, Wallet, TrendingUp,
-  Calendar, Timer, BookOpen, Target, Clock
+  Calendar, Timer, BookOpen, Target, Clock, Play
 } from 'lucide-react';
 import './Dashboard.css';
 
 const QUOTE = "The secret of getting ahead is getting started. Make today count.";
-
-const STUDY_PLAN = [
-  { subject: 'Mathematics',   time: '9:00 – 10:30 AM' },
-  { subject: 'Physics',       time: '11:00 – 12:00 PM' },
-  { subject: 'Database Systems', time: '2:00 – 3:30 PM' },
-  { subject: 'Revision',      time: '5:00 – 6:00 PM'  },
-];
-
-const TASKS = [
-  { text: 'Submit assignment 3 – DBMS',   due: 'Today'    },
-  { text: 'Prepare Physics lab report',    due: 'Tomorrow' },
-  { text: 'Read OS chapter 7–8',           due: 'Wed'      },
-  { text: 'Group study – Algorithms',      due: 'Thu'      },
-];
-
-const weeklyData = [
-  { day: 'Mon', h: 60, val: '4h'   },
-  { day: 'Tue', h: 80, val: '6h'   },
-  { day: 'Wed', h: 40, val: '2h'   },
-  { day: 'Thu', h: 90, val: '7h'   },
-  { day: 'Fri', h: 65, val: '4.5h' },
-  { day: 'Sat', h: 30, val: '1.5h' },
-  { day: 'Sun', h: 10, val: '0.5h' },
-];
+const GOALS_KEY = 'eduportal_goals';
+const SCHEDULE_KEY = 'eduportal_schedule';
+const POMO_KEY = 'eduportal_pomo_stats';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
+  
+  // Real-world dynamic states
   const [loading, setLoading] = useState(true);
+  const [attendanceRate, setAttendanceRate] = useState(0);
+  const [feesDue, setFeesDue] = useState(0);
+  
+  // Local persistence states
+  const [tasks, setTasks] = useState([]);
+  const [studyPlan, setStudyPlan] = useState([]);
+  
+  // Focus Time stats
+  const [focusToday, setFocusToday] = useState(0); // in hours
+  const [weeklyData, setWeeklyData] = useState([]);
+  const [streak, setStreak] = useState(0);
 
-  const attendanceRate   = 85;
+  const fetchDynamicData = async () => {
+    try {
+      // 1. Fetch live API data concurrently
+      const [feeRes, attRes] = await Promise.allSettled([
+        getMyFees(),
+        getMyAttendance()
+      ]);
+
+      if (feeRes.status === 'fulfilled' && feeRes.value.data) {
+        const feesList = feeRes.value.data;
+        const total = feesList.reduce((acc, f) => acc + (f.totalAmount || 0), 0);
+        const paid = feesList.reduce((acc, f) => acc + (f.paidAmount || 0), 0);
+        setFeesDue(total - paid);
+      }
+
+      if (attRes.status === 'fulfilled' && attRes.value.summary) {
+        const { PRESENT, TOTAL_DAYS } = attRes.value.summary;
+        if (TOTAL_DAYS > 0) {
+          setAttendanceRate(Math.round((PRESENT / TOTAL_DAYS) * 100));
+        }
+      }
+
+      // 2. Fetch Tasks from LocalStorage
+      try {
+        const loadedGoals = JSON.parse(localStorage.getItem(GOALS_KEY)) || [];
+        const pendingTasks = loadedGoals.filter(g => !g.completed).slice(0, 4);
+        setTasks(pendingTasks);
+      } catch (e) {}
+
+      // 3. Fetch Today's Schedule from LocalStorage
+      try {
+        const loadedSchedule = JSON.parse(localStorage.getItem(SCHEDULE_KEY)) || [];
+        const todayDayIndex = new Date().getDay();
+        const todayPlan = loadedSchedule
+          .filter(s => Number(s.day) === todayDayIndex)
+          .sort((a, b) => a.startTime.localeCompare(b.startTime))
+          .slice(0, 4);
+        setStudyPlan(todayPlan);
+      } catch (e) {}
+
+      // 4. Calculate Pomodoro Stats (Focus Time & Streak)
+      try {
+        const pomoStats = JSON.parse(localStorage.getItem(POMO_KEY)) || {};
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        // Today's focus time
+        const todayMins = pomoStats[todayStr] || 0;
+        setFocusToday(todayMins / 60);
+
+        // Weekly Output Chart Data calculation
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const chartData = [];
+        const now = new Date();
+        const currentDayIdx = now.getDay(); // 0 is Sunday
+        
+        // Let's create an array showing Monday to Sunday of the CURRENT week
+        // Note: adjust if week starts on a different day, we'll assume Mon-Sun
+        const weekStart = new Date(now);
+        weekStart.setDate(now.getDate() - currentDayIdx + (currentDayIdx === 0 ? -6 : 1)); // start on Monday
+
+        let maxMins = 1; // prevent div by zero
+        // pre-calculate max to scale chart
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(weekStart);
+          d.setDate(weekStart.getDate() + i);
+          const dateStr = d.toISOString().split('T')[0];
+          const mins = pomoStats[dateStr] || 0;
+          if (mins > maxMins) maxMins = mins;
+        }
+
+        for (let i = 0; i < 7; i++) {
+          const d = new Date(weekStart);
+          d.setDate(weekStart.getDate() + i);
+          const dateStr = d.toISOString().split('T')[0];
+          const mins = pomoStats[dateStr] || 0;
+          
+          chartData.push({
+            day: days[d.getDay()],
+            h: Math.min((mins / maxMins) * 100, 100), // Height percentage
+            val: (mins / 60).toFixed(1) + 'h'
+          });
+        }
+        setWeeklyData(chartData);
+
+        // Simple Streak Calculation (backwards counting from today/yesterday)
+        let streakCount = 0;
+        let testDate = new Date();
+        // If they haven't studied today, see if they studied yesterday
+        if (!pomoStats[todayStr]) {
+          testDate.setDate(testDate.getDate() - 1);
+        }
+        
+        while (true) {
+          const sDate = testDate.toISOString().split('T')[0];
+          if (pomoStats[sDate] && pomoStats[sDate] > 0) {
+            streakCount++;
+            testDate.setDate(testDate.getDate() - 1);
+          } else {
+            break;
+          }
+        }
+        setStreak(streakCount);
+      } catch (e) {}
+
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDynamicData();
+  }, []);
+
   const circleRadius     = 48;
   const circumference    = 2 * Math.PI * circleRadius;
   const dashOffset       = circumference - (attendanceRate / 100) * circumference;
-
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 400);
-    return () => clearTimeout(t);
-  }, []);
 
   const greeting = () => {
     const h = new Date().getHours();
@@ -54,11 +157,10 @@ const StudentDashboard = () => {
     return 'Good evening';
   };
 
-  if (loading) return <div className="loading-state">Loading dashboard…</div>;
+  if (loading) return <div className="loading-state">Syncing real-time workspace…</div>;
 
   return (
     <div className="premium-dashboard">
-      {/* Header */}
       <div className="page-header">
         <div>
           <h1>{greeting()}, {user?.email?.split('@')[0]}</h1>
@@ -71,7 +173,6 @@ const StudentDashboard = () => {
 
       {/* ── Row 1: Metrics ── */}
       <div className="metrics-row">
-        {/* Streak */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -80,12 +181,11 @@ const StudentDashboard = () => {
           </div>
           <div className="streak-display">
             <Flame size={32} className="streak-flame" />
-            <div className="streak-number">12</div>
+            <div className="streak-number">{streak}</div>
             <div className="streak-text">days consistent</div>
           </div>
         </div>
 
-        {/* Attendance */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -104,11 +204,10 @@ const StudentDashboard = () => {
               />
             </svg>
             <div className="progress-ring-text">{attendanceRate}%</div>
-            <div className="progress-label">Excellent standing</div>
+            <div className="progress-label">{attendanceRate > 80 ? 'Excellent standing' : attendanceRate > 60 ? 'Needs attention' : 'Critical state'}</div>
           </div>
         </div>
 
-        {/* Focus Time Today */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -116,14 +215,13 @@ const StudentDashboard = () => {
             </h3>
           </div>
           <div className="focus-stat">
-            <div className="focus-stat-value">4.5h</div>
+            <div className="focus-stat-value">{focusToday.toFixed(1)}h</div>
             <div className="focus-stat-label">focused today</div>
             <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Goal: 6h &nbsp;·&nbsp; <span style={{ color: '#34D399' }}>75% complete</span>
+              Goal: 6h &nbsp;·&nbsp; <span style={{ color: '#34D399' }}>{Math.round(Math.min((focusToday/6)*100, 100))}% complete</span>
             </div>
-            {/* Mini progress bar */}
             <div style={{ width:'100%', background:'var(--pastel-bg)', borderRadius:4, height:4, marginTop:'0.5rem', overflow:'hidden' }}>
-              <div style={{ width:'75%', height:'100%', background:'var(--primary-color)', borderRadius:4, transition:'width 1s ease' }} />
+              <div style={{ width:`${Math.min((focusToday/6)*100, 100)}%`, height:'100%', background:'var(--primary-color)', borderRadius:4, transition:'width 1s ease' }} />
             </div>
           </div>
         </div>
@@ -131,7 +229,6 @@ const StudentDashboard = () => {
 
       {/* ── Row 2: Chart + Fee ── */}
       <div className="analytical-row">
-        {/* Weekly Output Chart */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -142,7 +239,7 @@ const StudentDashboard = () => {
           <div className="chart-container">
             {weeklyData.map((d, i) => (
               <div className="chart-bar-wrap" key={i}>
-                <div className="chart-bar" style={{ height: `${d.h}%` }}>
+                <div className="chart-bar" style={{ height: `${d.h || 5}%`, opacity: d.h > 0 ? 1 : 0.3 }}>
                   <span className="chart-value-tooltip">{d.val}</span>
                 </div>
                 <span className="chart-label">{d.day}</span>
@@ -151,7 +248,6 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Fee Status */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -159,31 +255,33 @@ const StudentDashboard = () => {
             </h3>
           </div>
           <div className="streak-display" style={{ gap: '0.4rem' }}>
-            <span style={{ fontSize:'0.8rem', color:'var(--text-secondary)' }}>Next Payment Due</span>
-            <div className="fee-status-amount">$150.00</div>
-            <span style={{ fontSize:'0.75rem', color:'var(--text-secondary)' }}>Due: Apr 20, 2026</span>
-            <Link
-              to="/fees"
-              style={{
-                marginTop: '0.75rem',
-                display: 'inline-block',
-                background: 'var(--primary-color)',
-                color: '#000',
-                padding: '0.4rem 1.25rem',
-                borderRadius: 'var(--radius-md)',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-              }}
-            >
-              Pay Now
-            </Link>
+            <span style={{ fontSize:'0.8rem', color:'var(--text-secondary)' }}>Overall Balance Due</span>
+            <div className="fee-status-amount">${feesDue.toFixed(2)}</div>
+            {feesDue === 0 ? (
+              <span style={{ fontSize: '0.75rem', color: '#34D399', fontWeight: 600 }}>All paid up!</span>
+            ) : (
+              <Link
+                to="/fees"
+                style={{
+                  marginTop: '0.75rem',
+                  display: 'inline-block',
+                  background: 'var(--primary-color)',
+                  color: '#000',
+                  padding: '0.4rem 1.25rem',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                }}
+              >
+                Pay Now
+              </Link>
+            )}
           </div>
         </div>
       </div>
 
       {/* ── Row 3: Schedule + Tasks ── */}
       <div className="action-row">
-        {/* Today's Schedule */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
@@ -191,78 +289,65 @@ const StudentDashboard = () => {
             </h3>
           </div>
           <div className="timeline">
-            {[
-              { time: '9:00 AM',  title: 'Mathematics',      sub: 'Lecture Hall B' },
-              { time: '1:30 PM',  title: 'Physics Lab',       sub: 'Science Building' },
-              { time: '4:00 PM',  title: 'Study Group',       sub: 'Library, Floor 2' },
-            ].map((e, i) => (
-              <div className="timeline-item" key={i}>
-                <div className="timeline-dot" />
-                <div className="timeline-content">
-                  <span className="timeline-time">{e.time}</span>
-                  <h4>{e.title}</h4>
-                  <p>{e.sub}</p>
-                </div>
+            {studyPlan.length === 0 ? (
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', textAlign: 'center', marginTop: '1rem' }}>
+                No events scheduled for today.
               </div>
-            ))}
+            ) : (
+              studyPlan.map((e, i) => (
+                <div className="timeline-item" key={i}>
+                  <div className="timeline-dot" style={{ borderColor: e.color || 'var(--primary-color)' }} />
+                  <div className="timeline-content">
+                    <span className="timeline-time">{e.startTime} - {e.endTime}</span>
+                    <h4 style={{ color: e.color }}>{e.title}</h4>
+                    <p>{e.subject}</p>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
-        {/* Upcoming Tasks */}
         <div className="page-card widget-card">
           <div className="widget-header">
             <h3 className="widget-title">
               <Target size={15} className="widget-icon" /> Upcoming Tasks
             </h3>
+            <Link to="/goals" style={{ fontSize: '0.75rem', color: 'var(--primary-color)' }}>View All</Link>
           </div>
           <div className="study-plan-list">
-            {TASKS.map((task, i) => (
-              <div className="study-plan-item" key={i}>
-                <span className="subject-dot" />
-                <span style={{ flex: 1, fontSize: '0.825rem', color: 'var(--text-primary)' }}>{task.text}</span>
-                <span className="subject-time">{task.due}</span>
+            {tasks.length === 0 ? (
+              <div style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', padding: '1rem 0' }}>
+                You have no pending tasks.
               </div>
-            ))}
+            ) : (
+              tasks.map((task, i) => (
+                <div className="study-plan-item" key={i}>
+                  <span className="subject-dot" style={{ background: task.color || 'var(--primary-color)' }} />
+                  <span style={{ flex: 1, fontSize: '0.825rem', color: 'var(--text-primary)' }}>{task.text}</span>
+                  <span className="subject-time">{task.priority}</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
 
-      {/* ── Row 4: Study Plan + Quick Pomodoro ── */}
-      <div className="action-row">
-        {/* Today's Study Plan */}
-        <div className="page-card widget-card">
-          <div className="widget-header">
-            <h3 className="widget-title">
-              <BookOpen size={15} className="widget-icon" /> Today's Study Plan
+      {/* ── Row 4: Quick Pomodoro ── */}
+      <div className="action-row" style={{ gridTemplateColumns: 'minmax(0, 1fr)' }}>
+        <div className="page-card widget-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem 2rem' }}>
+          <div>
+            <h3 className="widget-title" style={{ marginBottom: '0.2rem' }}>
+              <Timer size={18} className="widget-icon" style={{ color: 'var(--primary-color)' }} /> 
+              Enter Focus Mode
             </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
+              Launch a Pomodoro session instantly and start tracking hours against your daily goal.
+            </p>
           </div>
-          <div className="study-plan-list">
-            {STUDY_PLAN.map((s, i) => (
-              <div className="study-plan-item" key={i}>
-                <span className="subject-dot" style={{ background: ['#22D3EE','#34D399','#A78BFA','#FB923C'][i] }} />
-                <span style={{ flex: 1 }}>{s.subject}</span>
-                <span className="subject-time">{s.time}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Quick Focus */}
-        <div className="page-card widget-card">
-          <div className="widget-header">
-            <h3 className="widget-title">
-              <Timer size={15} className="widget-icon" /> Quick Focus
-            </h3>
-          </div>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>
-            Launch a Pomodoro session instantly.
-          </p>
-          <div className="pomo-display">
-            <div className="pomo-time">25:00</div>
-            <Link to="/pomodoro" className="pomo-action">
-              <Timer size={14} /> Open Timer
-            </Link>
-          </div>
+          <Link to="/pomodoro" className="pomo-action" style={{ background: 'var(--primary-color)', color: '#000', border: 'none' }}>
+            <Play size={16} /> Start 25:00
+          </Link>
         </div>
       </div>
     </div>

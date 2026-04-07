@@ -31,6 +31,18 @@ const Pomodoro = () => {
           { mode, finishedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
           ...s.slice(0, 4),
         ]);
+        
+        // Log focus stats if it was a focus session
+        if (mode === 'focus') {
+          try {
+            const dateStr = new Date().toISOString().split('T')[0];
+            const stats = JSON.parse(localStorage.getItem('eduportal_pomo_stats')) || {};
+            const durationMins = Math.round(MODES.focus.duration / 60);
+            stats[dateStr] = (stats[dateStr] || 0) + durationMins;
+            localStorage.setItem('eduportal_pomo_stats', JSON.stringify(stats));
+          } catch (e) {}
+        }
+        
         return 0;
       }
       return prev - 1;
