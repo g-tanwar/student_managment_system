@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../hooks/useAuth';
 import { LogIn, Mail, Lock, GraduationCap } from 'lucide-react';
 
 const LoginPage = () => {

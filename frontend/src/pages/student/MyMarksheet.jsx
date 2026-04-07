@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import API from '../../api/axios';
+import { useAuth } from '../../hooks/useAuth';
+import API from '../../services/api';
 import './Marksheet.css';
 
 const getGrade = (obtained, total) => {

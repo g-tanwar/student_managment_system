@@ -1,16 +1,16 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './context/AuthContext';
-import Layout from './components/Layout';
-import LoginPage from './pages/LoginPage';
+import { useAuth } from './hooks/useAuth';
+import Layout from './layout/Layout';
+import LoginPage from './pages/auth/LoginPage';
 import LoadingSpinner from './components/LoadingSpinner';
 
 // Admin/Teacher pages
-import Dashboard from './pages/Dashboard';
-import Students from './pages/Students';
-import Attendance from './pages/Attendance';
-import Fees from './pages/Fees';
-import Exams from './pages/Exams';
-import Notices from './pages/Notices';
+import Dashboard from './pages/admin/Dashboard';
+import Students from './pages/admin/StudentManagement';
+import Attendance from './pages/admin/BulkAttendance';
+import Fees from './pages/admin/Fees';
+import Exams from './pages/admin/Exams';
+import Notices from './pages/common/Notices';
 
 // Student pages
 import StudentDashboard from './pages/student/StudentDashboard';

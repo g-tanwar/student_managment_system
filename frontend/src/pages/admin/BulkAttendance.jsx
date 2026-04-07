@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../../api/axios';
+import API from '../../services/api';
 import './BulkAttendance.css';
 
 const BulkAttendance = () => {

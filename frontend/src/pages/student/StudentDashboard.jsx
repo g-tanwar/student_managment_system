@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import API from '../../api/axios';
+import { useAuth } from '../../hooks/useAuth';
+import API from '../../services/api';
 import './Dashboard.css';
 
 const StudentDashboard = () => {

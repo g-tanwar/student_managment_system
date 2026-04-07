@@ -1,5 +1,5 @@
-import { useAuth } from '../context/AuthContext';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 import { 
   LayoutDashboard, Users, ClipboardCheck, Wallet, GraduationCap, 
   UserCircle, BarChart3, Bell, LogOut 
@@ -60,39 +60,4 @@ const Sidebar = () => {
   );
 };
 
-const TopNav = () => {
-  const { user } = useAuth();
-  return (
-    <header className="top-nav">
-      <h2 className="nav-title">Management System</h2>
-      
-      <div className="user-profile">
-        <div className="user-info">
-          <p className="user-email">{user?.email}</p>
-          <span className="user-role">{user?.role}</span>
-        </div>
-        <div className="user-avatar">
-          {user?.email?.[0].toUpperCase()}
-        </div>
-      </div>
-    </header>
-  );
-};
-
-const Layout = () => {
-  return (
-    <div className="layout-container">
-      <Sidebar />
-      <div className="main-wrapper">
-        <TopNav />
-        <main className="main-content">
-          <div className="content-max">
-            <Outlet />
-          </div>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default Layout;
+export default Sidebar;
