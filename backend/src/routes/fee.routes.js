@@ -6,8 +6,11 @@ const { protect, authorize } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
+// ── Student self-service routes (any authenticated user) ──────────────────────
+router.get('/me', protect, feeController.fetchMyFees);
+
+// ── Admin-only routes ─────────────────────────────────────────────────────────
 router.use(protect);
-// Admin required for assigning massive invoices and verifying checks natively
 router.use(authorize('ADMIN'));
 
 // Basic Reporting logic

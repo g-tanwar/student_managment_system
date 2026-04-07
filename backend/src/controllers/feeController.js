@@ -1,5 +1,16 @@
 const feeService = require('../services/feeService');
 
+// Student self-service: fetch own fee records
+const fetchMyFees = async (req, res, next) => {
+  try {
+    const studentId = req.user.id || req.user._id;
+    const data = await feeService.getFeeInvoices({ studentId, limit: 50 });
+    res.status(200).json({ success: true, data: data.fees });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Part A implementation
 const issueFee = async (req, res, next) => {
   try {
@@ -40,4 +51,4 @@ const generateDefaulterReport = async (req, res, next) => {
   }
 };
 
-module.exports = { issueFee, processPayment, fetchFeeInvoices, generateDefaulterReport };
+module.exports = { fetchMyFees, issueFee, processPayment, fetchFeeInvoices, generateDefaulterReport };

@@ -6,11 +6,13 @@ const { protect, authorize } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
-router.use(protect);
+// ── Student self-service routes (any authenticated user) ──────────────────────
+// Must be declared BEFORE the authorize('ADMIN', 'TEACHER') wall below
+router.get('/me', protect, attendanceController.fetchMyAttendance);
 
-// In a real app teachers might be allowed, but for now we follow the exact requested rules handling ADMIN.
-// If Teacher access is desired, simply change this to: router.use(authorize('ADMIN', 'TEACHER'));
-router.use(authorize('ADMIN', 'TEACHER')); 
+// ── Admin / Teacher routes ────────────────────────────────────────────────────
+router.use(protect);
+router.use(authorize('ADMIN', 'TEACHER'));
 
 router.post('/', validate(markSingleSchema), attendanceController.registerSingle);
 router.post('/bulk', validate(bulkMarkSchema), attendanceController.registerBulk);

@@ -1,8 +1,18 @@
 const attendanceService = require('../services/attendanceService');
 
+// Student self-service: fetch own attendance using JWT identity
+const fetchMyAttendance = async (req, res, next) => {
+  try {
+    const studentId = req.user.id || req.user._id;
+    const report = await attendanceService.getStudentReport(studentId, req.query);
+    res.status(200).json({ success: true, data: report.records, summary: report.summary });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const registerSingle = async (req, res, next) => {
   try {
-    // req.user.id is securely injected by our Auth middleware
     const record = await attendanceService.markSingle(req.body, req.user.id);
     res.status(201).json({ success: true, data: record });
   } catch (error) {
@@ -48,6 +58,7 @@ const modifyAttendance = async (req, res, next) => {
 };
 
 module.exports = {
+  fetchMyAttendance,
   registerSingle,
   registerBulk,
   fetchDailySheet,

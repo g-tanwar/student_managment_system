@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import API from '../../services/api';
+import { getMyAttendance } from '../../services/attendanceService';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import './Attendance.css';
 
@@ -15,10 +15,10 @@ const MyAttendance = () => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const res = await API.get(`/attendances/student/${user?.id || user?._id}`);
-        setRecords(res.data.data || []);
+        const result = await getMyAttendance();
+        setRecords(result.data || []);
       } catch (err) {
-        console.error(err);
+        console.error('Attendance fetch error:', err);
       } finally {
         setLoading(false);
       }
