@@ -96,17 +96,17 @@ const LoginPage = () => {
               )}
             </button>
 
-            <div className="login-footer">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsLoginMode(!isLoginMode);
-                  setError('');
-                }}
-              >
-                {isLoginMode ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-              </button>
-            </div>
+            <div style={{ textAlign: 'center', margin: '0.2rem 0', color: 'var(--text-secondary)', fontWeight: '800' }}>OR</div>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                setIsLoginMode(!isLoginMode);
+                setError('');
+              }}
+            >
+              {isLoginMode ? "Sign Up As New User" : "Sign In To Account"}
+            </button>
           </form>
         </div>
         <p className="login-footer">
