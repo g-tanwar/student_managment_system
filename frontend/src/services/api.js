@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5001/api/v1',
-  timeout: 10000,
+  baseURL: 'https://student-managment-system-2-i0vi.onrender.com/api/v1',
+  timeout: 30000,
 });
 
 // ── Request Interceptor: attach JWT token ──────────────────────────────────────
