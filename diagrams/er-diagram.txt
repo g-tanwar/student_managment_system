@@ -1,5 +1,5 @@
 ===========================================
-ER DIAGRAM — Student Management System
+ER DIAGRAM — Student Management System (EduPortal)
 ===========================================
 
 +------------------+         +------------------+
@@ -29,24 +29,24 @@ ER DIAGRAM — Student Management System
 +------------------+         | FK teacherId     |
         |                    |    status        |
         | HAS (many)         +------------------+
-        |
-+------------------+
-|    SECTION       |
-+------------------+
-| PK _id           |
-| FK classId       |
-|    sectionName   |
-|    status        |
-+------------------+
-        |
-        | CONTAINS (many)
-        |
-+------------------+
-|    STUDENT       |
-+------------------+
-| PK _id           |
-|    enrollmentNo  |
-|    firstName     |
+        |                            |
++------------------+                | SCHEDULED IN
+|    SECTION       |                |
++------------------+         +------------------+
+| PK _id           |         |      EXAM        |
+| FK classId       |         +------------------+
+|    sectionName   |         | PK _id           |
+|    status        |         |    examName      |
++------------------+         |    academicYear  |
+        |                    | FK classId       |
+        | CONTAINS (many)    | FK sectionId     |
+        |                    |    schedule[]    |
++------------------+         |    FK subjectId  |
+|    STUDENT       |         |    examDate      |
++------------------+         |    maxMarks      |
+| PK _id           |         |    passingMarks  |
+|    enrollmentNo  |         |    status        |
+|    firstName     |         +------------------+
 |    lastName      |
 |    gender        |
 |    dob           |
@@ -58,52 +58,60 @@ ER DIAGRAM — Student Management System
 |    isActive      |
 +------------------+
         |
-        |__________________________|___________________|
-        |                          |                   |
-        | HAS (many)               | HAS (many)        | HAS (many)
-        |                          |                   |
-+------------------+    +------------------+    +------------------+
-|   ATTENDANCE     |    |      MARK        |    |      FEE         |
-+------------------+    +------------------+    +------------------+
-| PK _id           |    | PK _id           |    | PK _id           |
-| FK studentId     |    | FK studentId     |    | FK studentId     |
-| FK classId       |    | FK examId        |    | FK classId       |
-| FK sectionId     |    | FK subjectId     |    |    feeType       |
-|    date          |    |    obtainedMarks |    |    academicYear  |
-|    status        |    |    totalMarks    |    |    totalAmount   |
-|    PRESENT/      |    |    remarks       |    |    paidAmount    |
-|    ABSENT/LATE   |    +------------------+    |    dueDate       |
-| FK markedBy      |                            |    status        |
-+------------------+                            |    payments[]    |
-                                                +------------------+
-
-+------------------+         +------------------+
-|      EXAM        |         |     NOTICE       |
-+------------------+         +------------------+
-| PK _id           |         | PK _id           |
-|    examName      |         |    title         |
-|    academicYear  |         |    description   |
-| FK classId       |         |    audience      |
-| FK sectionId     |         |    publishDate   |
-|    schedule[]    |         |    expiryDate    |
-|    FK subjectId  |         |    status        |
-|    examDate      |         | FK createdBy     |
-|    maxMarks      |         +------------------+
-|    passingMarks  |
+        |___________________|___________________|
+        |                   |                   |
+        | HAS (many)        | HAS (many)        | HAS (many)
+        |                   |                   |
++------------------+  +------------------+  +------------------+
+|   ATTENDANCE     |  |      MARK        |  |      FEE         |
++------------------+  +------------------+  +------------------+
+| PK _id           |  | PK _id           |  | PK _id           |
+| FK studentId     |  | FK studentId     |  | FK studentId     |
+| FK classId       |  | FK examId        |  | FK classId       |
+| FK sectionId     |  | FK subjectId     |  |    feeType       |
+|    date          |  |    obtainedMarks |  |    academicYear  |
+|    status        |  |    totalMarks    |  |    totalAmount   |
+|    PRESENT/      |  |    remarks       |  |    paidAmount    |
+|    ABSENT/LATE   |  +------------------+  |    dueDate       |
+| FK markedBy      |                        |    status        |
++------------------+                        |    payments[]    |
+                                            |    amount        |
++------------------+                        |    paymentMethod |
+|     NOTICE       |                        |    paymentDate   |
++------------------+                        |    recordedBy    |
+| PK _id           |                        +------------------+
+|    title         |
+|    description   |
+|    audience      |
+|    ALL/STUDENTS/ |
+|    TEACHERS      |
+|    publishDate   |
+|    expiryDate    |
 |    status        |
+| FK createdBy     |
 +------------------+
 
 RELATIONSHIPS:
-- User (1) ---------> (1) Teacher      [userId]
-- Class (1) ---------> (many) Section
-- Class (1) ---------> (many) Subject
-- Class (1) ---------> (many) Student
-- Section (1) -------> (many) Student
-- Teacher (1) -------> (many) Subject  [teacherId]
-- Student (1) -------> (many) Attendance
-- Student (1) -------> (many) Mark
-- Student (1) -------> (many) Fee
-- Exam (1) ----------> (many) Mark
-- Subject (1) -------> (many) Mark
-- User/Admin (1) ----> (many) Notice   [createdBy]
-- User (1) ----------> (many) Attendance [markedBy]
+- User (1) ----------> (1) Teacher       [userId]
+- Class (1) ----------> (many) Section
+- Class (1) ----------> (many) Subject
+- Class (1) ----------> (many) Student
+- Class (1) ----------> (many) Exam
+- Section (1) ---------> (many) Student
+- Teacher (1) ---------> (many) Subject   [teacherId]
+- Student (1) ---------> (many) Attendance
+- Student (1) ---------> (many) Mark
+- Student (1) ---------> (many) Fee
+- Exam (1) ------------> (many) Mark
+- Subject (1) ---------> (many) Mark
+- User/Admin (1) ------> (many) Notice    [createdBy]
+- User (1) ------------> (many) Attendance [markedBy]
+- Fee (1) -------------> (many) Payment   [embedded]
+
+DB INDEXES (Performance Optimization):
+- Attendance: {studentId, date} — unique
+- Mark: {studentId, examId, subjectId} — unique
+- Section: {classId, sectionName} — unique
+- Notice: {status, audience, publishDate}
+- Student: {enrollmentNo} — unique
+- Teacher: {employeeId} — unique

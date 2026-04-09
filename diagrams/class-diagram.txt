@@ -1,5 +1,5 @@
 ===========================================
-CLASS DIAGRAM — Student Management System
+CLASS DIAGRAM — Student Management System (EduPortal)
 ===========================================
 
 +------------------+       +------------------+
@@ -38,7 +38,10 @@ CLASS DIAGRAM — Student Management System
 |   ALUMNI         |       | - sectionName    |
 | - isActive: Bool |       | - classId (ref)  |
 +------------------+       | - status: ENUM   |
-                           +------------------+
+| + createStudent()|       +------------------+
+| + updateStudent()|
+| + deleteStudent()|
++------------------+
 
 +------------------+       +------------------+
 |    Subject       |       |     Exam         |
@@ -69,26 +72,49 @@ CLASS DIAGRAM — Student Management System
 | - status: ENUM   |       | - totalMarks     |
 |   PRESENT/ABSENT/|       | - remarks        |
 |   LATE           |       +------------------+
-| - markedBy (ref) |
+| - markedBy (ref) |       | + submitMark()   |
++------------------+       | + getMarksheet() |
+| + markSingle()   |       +------------------+
+| + markBulk()     |
+| + getDailySheet()|
++------------------+
+
 +------------------+       +------------------+
-                           |      Fee         |
+|      Fee         |       |     Notice       |
 +------------------+       +------------------+
-|    Notice        |       | - studentId (ref)|
-+------------------+       | - classId (ref)  |
-| - title          |       | - feeType        |
-| - description    |       | - academicYear   |
-| - audience: ENUM |       | - totalAmount    |
-|   ALL/STUDENTS/  |       | - paidAmount     |
-|   TEACHERS       |       | - dueDate        |
-| - publishDate    |       | - status: ENUM   |
-| - expiryDate     |       |   UNPAID/        |
-| - status: ENUM   |       |   PARTIALLY_PAID/|
-| - createdBy (ref)|       |   PAID           |
-+------------------+       | - payments[]     |
-                           +------------------+
+| - studentId (ref)|       | - title          |
+| - classId (ref)  |       | - description    |
+| - feeType        |       | - audience: ENUM |
+| - academicYear   |       |   ALL/STUDENTS/  |
+| - totalAmount    |       |   TEACHERS       |
+| - paidAmount     |       | - publishDate    |
+| - dueDate        |       | - expiryDate     |
+| - status: ENUM   |       | - status: ENUM   |
+|   UNPAID/        |       | - createdBy (ref)|
+|   PARTIALLY_PAID/|       +------------------+
+|   PAID           |       | + createNotice() |
+| - payments[]     |       | + getNotices()   |
++------------------+       +------------------+
+| + assignFee()    |
+| + recordPayment()|
+| + getDueReport() |
++------------------+
+
+FRONTEND COMPONENTS:
++------------------+       +------------------+
+|   AuthContext    |       |   ApiService     |
++------------------+       +------------------+
+| - user           |       | - baseURL        |
+| - token          |       | - interceptors   |
+| - role           |       +------------------+
++------------------+       | + get()          |
+| + login()        |       | + post()         |
+| + logout()       |       | + put()          |
+| + signup()       |       | + delete()       |
++------------------+       +------------------+
 
 RELATIONSHIPS:
-- User (1) -----> (1) Teacher  [userId ref]
+- User (1) -----> (1) Teacher     [userId ref]
 - Student (many) --> (1) Class
 - Student (many) --> (1) Section
 - Section (many) --> (1) Class
@@ -96,6 +122,6 @@ RELATIONSHIPS:
 - Subject (many) --> (1) Teacher
 - Attendance (many) --> (1) Student
 - Mark (many) --> (1) Student
-- Mark (many) --> (1) Exam
 - Fee (many) --> (1) Student
 - Exam (many) --> (1) Class
+- Notice (many) --> (1) User/Admin

@@ -4,22 +4,26 @@ SEQUENCE DIAGRAM 1 — Admin Login Flow
 
 Admin          Frontend        Backend         Database
   |                |               |               |
-  |  POST /login   |               |               |
-  |  email+password|               |               |
+  |  Enter email   |               |               |
+  |  + password    |               |               |
   |--------------->|               |               |
   |                | POST /api/v1  |               |
   |                | /auth/login   |               |
   |                |-------------->|               |
+  |                |               | validate()    |
   |                |               | findOne(email)|
-  |                |               |+password      |
+  |                |               | +password     |
   |                |               |-------------->|
-  |                |               |  User Object  |
+  |                |               | User Object   |
   |                |               |<--------------|
   |                |               | comparePassword|
   |                |               | generateToken |
   |                |  JWT Token    |               |
   |                |<--------------|               |
-  |  200 OK +Token |               |               |
+  |                | localStorage  |               |
+  |                | .setItem(token)|              |
+  |  Redirect to   |               |               |
+  |  /dashboard    |               |               |
   |<---------------|               |               |
 
 ===========================================
@@ -29,13 +33,15 @@ SEQUENCE DIAGRAM 2 — Add Student Flow
 Admin          Frontend        Backend         Database
   |                |               |               |
   |  Fill Form     |               |               |
+  |  + Click Submit|               |               |
   |--------------->|               |               |
   |                | POST /api/v1  |               |
   |                | /students     |               |
   |                | +JWT Token    |               |
   |                |-------------->|               |
   |                |               | protect()     |
-  |                |               | authorize()   |
+  |                |               | authorize     |
+  |                |               | (ADMIN)       |
   |                |               | validate()    |
   |                |               | findOne       |
   |                |               | (enrollmentNo)|
@@ -48,17 +54,33 @@ Admin          Frontend        Backend         Database
   |                |               |<--------------|
   |                |  201 Created  |               |
   |                |<--------------|               |
-  |  Success msg   |               |               |
+  |  List refreshed|               |               |
   |<---------------|               |               |
 
 ===========================================
-SEQUENCE DIAGRAM 3 — Mark Bulk Attendance
+SEQUENCE DIAGRAM 3 — Bulk Attendance Flow
 ===========================================
 
 Teacher        Frontend        Backend         Database
   |                |               |               |
   |  Select Class  |               |               |
-  |  + Students    |               |               |
+  |  + Section     |               |               |
+  |--------------->|               |               |
+  |                | GET /students |               |
+  |                | ?classId=x    |               |
+  |                | &sectionId=y  |               |
+  |                |-------------->|               |
+  |                |               | find(filter)  |
+  |                |               |-------------->|
+  |                |               | Students[]    |
+  |                |               |<--------------|
+  |                | Student list  |               |
+  |                |<--------------|               |
+  |  Mark each     |               |               |
+  |  PRESENT/      |               |               |
+  |  ABSENT/LATE   |               |               |
+  |--------------->|               |               |
+  |  Click Submit  |               |               |
   |--------------->|               |               |
   |                | POST /api/v1  |               |
   |                | /attendances  |               |
@@ -67,7 +89,6 @@ Teacher        Frontend        Backend         Database
   |                |               | protect()     |
   |                |               | authorize     |
   |                |               | (ADMIN/TEACHER)|
-  |                |               | validate()    |
   |                |               | Check duplicates|
   |                |               |-------------->|
   |                |               | No duplicates |
@@ -78,40 +99,64 @@ Teacher        Frontend        Backend         Database
   |                |               |<--------------|
   |                |  201 Created  |               |
   |                |<--------------|               |
-  |  Attendance    |               |               |
-  |  Marked!       |               |               |
+  |  Success msg!  |               |               |
   |<---------------|               |               |
 
 ===========================================
-SEQUENCE DIAGRAM 4 — Record Fee Payment
+SEQUENCE DIAGRAM 4 — Student View Own Fees
 ===========================================
 
-Admin          Frontend        Backend         Database
+Student        Frontend        Backend         Database
   |                |               |               |
-  |  Enter Payment |               |               |
-  |  Details       |               |               |
+  |  Visit /fees   |               |               |
   |--------------->|               |               |
-  |                | POST /api/v1  |               |
-  |                | /fees/:id/pay |               |
+  |                | GET /api/v1   |               |
+  |                | /fees/me      |               |
   |                | +JWT Token    |               |
   |                |-------------->|               |
   |                |               | protect()     |
-  |                |               | authorize(ADMIN)|
-  |                |               | findById(fee) |
+  |                |               | findById      |
+  |                |               | (studentId)   |
   |                |               |-------------->|
-  |                |               | Fee Object    |
+  |                |               | Fee Records[] |
   |                |               |<--------------|
-  |                |               | Check status  |
-  |                |               | != PAID       |
-  |                |               | Validate amount|
-  |                |               | Update paidAmount|
-  |                |               | Push payment  |
-  |                |               | history       |
-  |                |               | fee.save()    |
-  |                |               |-------------->|
-  |                |               | Updated Fee   |
-  |                |               |<--------------|
-  |                |  200 OK       |               |
+  |                | Fee data      |               |
   |                |<--------------|               |
-  |  Payment Logged|               |               |
+  |  Summary cards |               |               |
+  |  Total/Paid/Due|               |               |
+  |  displayed     |               |               |
   |<---------------|               |               |
+
+===========================================
+SEQUENCE DIAGRAM 5 — Goals Tracker Flow
+===========================================
+
+Student        Frontend        localStorage
+  |                |               |
+  |  Click New Goal|               |
+  |--------------->|               |
+  |  Fill title +  |               |
+  |  deadline +    |               |
+  |  priority      |               |
+  |--------------->|               |
+  |  Click Add Goal|               |
+  |--------------->|               |
+  |                | saveGoals()   |
+  |                |-------------->|
+  |                | Goals saved   |
+  |                |<--------------|
+  |  Goal appears  |               |
+  |  in Active list|               |
+  |<---------------|               |
+  |  Drag slider   |               |
+  |  to update     |               |
+  |  progress      |               |
+  |--------------->|               |
+  |                | updateProgress|
+  |                | saveGoals()   |
+  |                |-------------->|
+  |                | Updated       |
+  |                |<--------------|
+  |  Progress bar  |               |
+  |  updates       |               |
+  |<---------------|               |
