@@ -3,25 +3,35 @@
 ## 1. Problem Statement
 
 Educational institutions face difficulty in managing student data manually. 
-This system provides a digital solution to manage students, teachers, courses, 
-attendance, marks, fees, and notices efficiently through a REST API backend.
+This system provides a complete digital solution — EduPortal — to manage 
+students, teachers, attendance, marks, fees, and notices through a modern 
+web application with role-based access.
 
 ---
 
 ## 2. Features
 
-- JWT Based Authentication (Admin/Teacher roles)
-- Student CRUD with soft delete (Archive)
+### Admin Features:
+- JWT Based Authentication
+- Student CRUD with soft delete
 - Teacher Management with linked User account
 - Class and Section Management
 - Subject Management with Teacher assignment
-- Attendance Tracking (Single + Bulk) with duplicate prevention
+- Bulk Attendance Marking with duplicate prevention
 - Exam Scheduling with Subject-wise marks
-- Fee Management with payment history tracking
-- Notice Board with audience targeting
+- Fee Assignment (individual + class-wide) with payment history
+- Notice Board with audience targeting (ALL/STUDENTS/TEACHERS)
 - Role Based Access Control (RBAC)
-- Input Validation using Joi
-- Centralized Error Handling
+
+### Student Features:
+- View own Attendance with summary
+- View own Fee status and payment history
+- Upload Fee Receipt
+- Notes Management
+- Pomodoro Focus Timer
+- Schedule Management
+- Goals Tracker with progress tracking
+- Profile Management
 
 ---
 
@@ -29,9 +39,9 @@ attendance, marks, fees, and notices efficiently through a REST API backend.
 
 | Member | Role | Responsibilities |
 |--------|------|-----------------|
-| Gourav Tanwar | Backend Developer | Node.js API, MongoDB Models, Services, Routes |
 | Kashika Agarwal | Docs + UML + Testing | Report, Diagrams, Test Cases, README |
-| Shrijan Sanidhya | Frontend Developer | UI, Forms, Dashboard |
+| Gourav Tanwar | Backend Developer | Node.js API, MongoDB Models, Services, Routes, JWT Auth |
+| Shrijan Sanidhya | Frontend Developer | React UI, Admin Pages, Student Dashboard, API Integration |
 
 ---
 
@@ -39,40 +49,61 @@ attendance, marks, fees, and notices efficiently through a REST API backend.
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | HTML, CSS, JavaScript |
+| Frontend | React.js, React Router, Axios, Lucide Icons |
 | Backend | Node.js, Express.js |
 | Database | MongoDB (Mongoose ODM) |
 | Authentication | JWT (JSON Web Tokens) |
 | Validation | Joi |
+| Styling | CSS Modules |
 
 ---
 
 ## 5. Architecture
 
 3-Tier Architecture:
-- Tier 1: Frontend (UI)
-- Tier 2: Backend (Node.js + Express.js)
-- Tier 3: Database (MongoDB)
+- Tier 1: Frontend (React.js SPA)
+- Tier 2: Backend (Node.js + Express.js REST API)
+- Tier 3: Database (MongoDB Atlas)
 
 MVC Pattern:
-- Model: Mongoose Schemas (User, Student, Teacher, Class, Section, Subject, Attendance, Exam, Mark, Fee, Notice)
-- View: Frontend (HTML/CSS/JS)
+- Model: Mongoose Schemas
+- View: React Components (SPA)
 - Controller: Express Controllers + Services
 
-## 6. OOP Concepts Used
+---
 
-- Encapsulation: Data hidden in Mongoose models (password hidden by default)
+## 6. Frontend Structure
+
+- Auth: Login/Signup with JWT token storage
+- Layout: Sidebar + TopNav with role-based routing
+- Admin Pages: Student Management, Bulk Attendance, Exams, Fees, Marks
+- Student Pages: Dashboard, Attendance, Fees, Notes, Pomodoro, Schedule, Goals, Profile
+- Services: api.js (Axios), attendanceService, feeService, studentService
+- Hooks: useAuth (AuthContext with JWT persistence)
+
+---
+
+## 7. OOP Concepts Used
+
+- Encapsulation: Password hidden in User model, JWT token in localStorage
 - Inheritance: User → Teacher (linked via userId)
-- Abstraction: Service layer abstracts business logic from controllers
+- Abstraction: Service layer abstracts API calls from React components
 - Polymorphism: Different report generation for marks, attendance, fees
 
-## 7. Design Patterns Used
+---
 
-- Singleton Pattern: MongoDB connection (connectDB)
+## 8. Design Patterns Used
+
+- Singleton Pattern: MongoDB connection (connectDB), Axios instance (api.js)
 - MVC Pattern: Models, Controllers, Services separation
+- Context Pattern: AuthContext for global auth state (React)
+- Observer Pattern: useEffect hooks for data fetching
 
-## 8. SOLID Principles
+---
 
-- Single Responsibility: Each service handles one entity only
+## 9. SOLID Principles
+
+- Single Responsibility: Each service file handles one entity only
 - Open/Closed: Middleware can be extended without modifying routes
 - Dependency Inversion: Controllers depend on services, not directly on models
+- Interface Segregation: Separate service files for attendance, fee, student

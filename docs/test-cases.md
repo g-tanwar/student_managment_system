@@ -1,4 +1,4 @@
-# Test Cases — Student Management System
+# Test Cases — Student Management System (EduPortal)
 
 ## 1. Authentication Test Cases
 
@@ -10,6 +10,10 @@
 | TC04 | Access admin route as Teacher | Teacher JWT | 403 Forbidden | ✅ Pass |
 | TC05 | Seed Admin | No admin exists | Admin created | ✅ Pass |
 | TC06 | Seed Admin again | Admin exists | 400 Already exists | ✅ Pass |
+| TC07 | Token expired | Old JWT | 401 Invalid token | ✅ Pass |
+| TC08 | Get profile (GET /auth/me) | Valid Admin JWT | Admin profile returned | ✅ Pass |
+| TC09 | Frontend login redirect | Valid credentials | Redirect to /dashboard | ✅ Pass |
+| TC10 | Frontend logout | Click logout | Token cleared, redirect /login | ✅ Pass |
 
 ---
 
@@ -17,13 +21,16 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC07 | Add Student | Valid student data | 201 Student created | ✅ Pass |
-| TC08 | Add Duplicate Student | Same enrollmentNo | 400 Already exists | ✅ Pass |
-| TC09 | Get All Students | Valid JWT Admin | List of students | ✅ Pass |
-| TC10 | Get Single Student | Valid student ID | Student object | ✅ Pass |
-| TC11 | Get Invalid Student | Wrong ID | 404 Not found | ✅ Pass |
-| TC12 | Update Student | Valid ID + data | Updated student | ✅ Pass |
-| TC13 | Delete Student | Valid student ID | Student archived | ✅ Pass |
+| TC11 | Add Student | Valid student data | 201 Student created | ✅ Pass |
+| TC12 | Add Duplicate Student | Same enrollmentNo | 400 Already exists | ✅ Pass |
+| TC13 | Get All Students | Valid JWT Admin | List of students | ✅ Pass |
+| TC14 | Get Single Student | Valid student ID | Student object | ✅ Pass |
+| TC15 | Get Invalid Student | Wrong ID | 404 Not found | ✅ Pass |
+| TC16 | Update Student | Valid ID + data | Updated student | ✅ Pass |
+| TC17 | Delete Student | Valid student ID | Student archived | ✅ Pass |
+| TC18 | Add Student from UI | Fill form + Submit | Student added, list refreshed | ✅ Pass |
+| TC19 | Delete Student from UI | Click Delete button | Confirm dialog, student removed | ✅ Pass |
+| TC20 | View Students by Class | classId filter | Filtered student list | ✅ Pass |
 
 ---
 
@@ -31,11 +38,11 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC14 | Add Teacher | Valid teacher data | 201 Teacher created | ✅ Pass |
-| TC15 | Add Teacher duplicate email | Same email | 400 Already exists | ✅ Pass |
-| TC16 | Add Teacher duplicate employeeId | Same employeeId | 400 Already exists | ✅ Pass |
-| TC17 | Get All Teachers | Valid JWT Admin | List of teachers | ✅ Pass |
-| TC18 | Deactivate Teacher | Valid teacher ID | Teacher archived | ✅ Pass |
+| TC21 | Add Teacher | Valid teacher data | 201 Teacher + User created | ✅ Pass |
+| TC22 | Add Teacher duplicate email | Same email | 400 Already exists | ✅ Pass |
+| TC23 | Add Teacher duplicate employeeId | Same employeeId | 400 Already exists | ✅ Pass |
+| TC24 | Get All Teachers | Valid JWT Admin | List of teachers | ✅ Pass |
+| TC25 | Deactivate Teacher | Valid teacher ID | Teacher + User deactivated | ✅ Pass |
 
 ---
 
@@ -43,13 +50,16 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC19 | Mark Single Attendance | Valid student+date | 201 Attendance marked | ✅ Pass |
-| TC20 | Mark Duplicate Attendance | Same student+date | 400 Duplicate error | ✅ Pass |
-| TC21 | Mark Bulk Attendance | Class+Section+records | 201 All marked | ✅ Pass |
-| TC22 | Bulk with duplicate in payload | Same studentId twice | 400 Payload error | ✅ Pass |
-| TC23 | Get Daily Sheet | classId+sectionId+date | Attendance list | ✅ Pass |
-| TC24 | Get Student Report | studentId | Summary + records | ✅ Pass |
-| TC25 | Update Attendance | Valid ID + new status | Updated record | ✅ Pass |
+| TC26 | Mark Single Attendance | Valid student+date | 201 Attendance marked | ✅ Pass |
+| TC27 | Mark Duplicate Attendance | Same student+date | 400 Duplicate error | ✅ Pass |
+| TC28 | Mark Bulk Attendance | Class+Section+records | 201 All marked | ✅ Pass |
+| TC29 | Bulk with duplicate in payload | Same studentId twice | 400 Payload error | ✅ Pass |
+| TC30 | Get Daily Sheet | classId+sectionId+date | Attendance list | ✅ Pass |
+| TC31 | Get Student Report | studentId | Summary + records | ✅ Pass |
+| TC32 | Update Attendance | Valid ID + new status | Updated record | ✅ Pass |
+| TC33 | Fetch Students in Bulk UI | Select Class+Section | Student list loaded | ✅ Pass |
+| TC34 | Submit Bulk Attendance from UI | Mark all + Submit | Success message shown | ✅ Pass |
+| TC35 | Bulk UI without class/section | Click Fetch | Alert: select class and section | ✅ Pass |
 
 ---
 
@@ -57,12 +67,12 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC26 | Submit Single Mark | Valid data | 201 Mark recorded | ✅ Pass |
-| TC27 | Submit Mark exceeds total | obtainedMarks > totalMarks | 400 Logic error | ✅ Pass |
-| TC28 | Submit Duplicate Mark | Same student+exam+subject | 400 Duplicate error | ✅ Pass |
-| TC29 | Submit Bulk Marks | examId+subjectId+records | 201 All recorded | ✅ Pass |
-| TC30 | Get Student Marksheet | Valid studentId | Marksheet + percentage | ✅ Pass |
-| TC31 | Get Class Ranking | Valid examId | Ranked list | ✅ Pass |
+| TC36 | Submit Single Mark | Valid data | 201 Mark recorded | ✅ Pass |
+| TC37 | Submit Mark exceeds total | obtainedMarks > totalMarks | 400 Logic error | ✅ Pass |
+| TC38 | Submit Duplicate Mark | Same student+exam+subject | 400 Duplicate error | ✅ Pass |
+| TC39 | Submit Bulk Marks | examId+subjectId+records | 201 All recorded | ✅ Pass |
+| TC40 | Get Student Marksheet | Valid studentId | Marksheet + percentage | ✅ Pass |
+| TC41 | Get Class Ranking | Valid examId | Ranked list high to low | ✅ Pass |
 
 ---
 
@@ -70,22 +80,51 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC32 | Assign Fee to Student | Valid studentId | 201 Fee assigned | ✅ Pass |
-| TC33 | Assign Fee to Class | Valid classId | 201 Bulk assigned | ✅ Pass |
-| TC34 | Record Payment | Valid feeId + amount | Payment logged | ✅ Pass |
-| TC35 | Overpay Fee | amount > outstanding | 400 Validation error | ✅ Pass |
-| TC36 | Pay already PAID fee | PAID fee ID | 400 Already paid | ✅ Pass |
-| TC37 | Get Defaulter Report | No input | Aggregated due list | ✅ Pass |
+| TC42 | Assign Fee to Student | Valid studentId | 201 Fee assigned | ✅ Pass |
+| TC43 | Assign Fee to Class | Valid classId | 201 Bulk assigned | ✅ Pass |
+| TC44 | Record Payment | Valid feeId + amount | Payment logged | ✅ Pass |
+| TC45 | Overpay Fee | amount > outstanding | 400 Validation error | ✅ Pass |
+| TC46 | Pay already PAID fee | PAID fee ID | 400 Already paid | ✅ Pass |
+| TC47 | Get Defaulter Report | No input | Aggregated due list | ✅ Pass |
+| TC48 | Student view own fees | Student JWT | Fee list with status | ✅ Pass |
+| TC49 | Fee summary cards in UI | Load /fees page | Total/Paid/Due shown correctly | ✅ Pass |
+| TC50 | Upload receipt in UI | Select file + Submit | Progress bar + success message | ✅ Pass |
 
 ---
 
-## 7. Notice Board Test Cases
+## 7. Goals Tracker Test Cases (Frontend)
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC38 | Create Notice | Valid data + Admin JWT | 201 Notice created | ✅ Pass |
-| TC39 | Create Notice as Teacher | Teacher JWT | 403 Forbidden | ✅ Pass |
-| TC40 | Get All Notices | Valid JWT | Notice list | ✅ Pass |
-| TC41 | Get Notice by audience | audience=STUDENTS | Filtered notices | ✅ Pass |
-| TC42 | Update Notice | Valid ID + data | Updated notice | ✅ Pass |
-| TC43 | Delete Notice | Valid ID | Notice deleted | ✅ Pass |
+| TC51 | Add new goal | Title + deadline + priority | Goal added to list | ✅ Pass |
+| TC52 | Add goal without title | Empty title | Button disabled | ✅ Pass |
+| TC53 | Update goal progress | Drag slider | Progress bar updates | ✅ Pass |
+| TC54 | Mark goal complete | Click Mark Complete | Progress = 100%, moved to Completed | ✅ Pass |
+| TC55 | Delete goal | Click Delete | Goal removed from list | ✅ Pass |
+| TC56 | Goals persist on refresh | Reload page | Goals loaded from localStorage | ✅ Pass |
+| TC57 | Overdue goal display | Deadline in past | Overdue warning shown | ✅ Pass |
+
+---
+
+## 8. Notice Board Test Cases
+
+| TC ID | Test Case | Input | Expected Output | Status |
+|-------|-----------|-------|-----------------|--------|
+| TC58 | Create Notice | Valid data + Admin JWT | 201 Notice created | ✅ Pass |
+| TC59 | Create Notice as Teacher | Teacher JWT | 403 Forbidden | ✅ Pass |
+| TC60 | Get All Notices | Valid JWT | Notice list | ✅ Pass |
+| TC61 | Get Notice by audience | audience=STUDENTS | Filtered + ALL notices | ✅ Pass |
+| TC62 | Update Notice | Valid ID + data | Updated notice | ✅ Pass |
+| TC63 | Delete Notice | Valid ID | Notice deleted | ✅ Pass |
+
+---
+
+## 9. Navigation & Routing Test Cases (Frontend)
+
+| TC ID | Test Case | Input | Expected Output | Status |
+|-------|-----------|-------|-----------------|--------|
+| TC64 | Access /dashboard without login | No token | Redirect to /login | ✅ Pass |
+| TC65 | Access /login after login | Valid token | Redirect to /dashboard | ✅ Pass |
+| TC66 | Unknown route | /xyz | Redirect to / | ✅ Pass |
+| TC67 | Sidebar navigation | Click Attendance | Navigate to /attendance | ✅ Pass |
+| TC68 | Page title in TopNav | Visit /fees | Shows "Fee Management" | ✅ Pass |
