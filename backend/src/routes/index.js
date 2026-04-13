@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth.routes');
+const authMySQLRoutes = require('./authMySQL.routes');
 const studentRoutes = require('./student.routes');
 const teacherRoutes = require('./teacher.routes');
 const classRoutes = require('./class.routes');
@@ -22,6 +23,7 @@ router.get('/health', (req, res) => {
 
 // Mounted application routes
 router.use('/auth', authRoutes);
+router.use('/auth-mysql', authMySQLRoutes); // MySQL-backed auth (signup/login)
 router.use('/students', studentRoutes);
 router.use('/teachers', teacherRoutes);
 router.use('/classes', classRoutes);

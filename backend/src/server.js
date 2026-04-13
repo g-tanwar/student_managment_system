@@ -1,19 +1,36 @@
 require('dotenv').config({ override: true });
 const app = require('./app');
 const connectDB = require('./config/db');
+const { initDatabase, closePool } = require('./config/mysql');
 
 const PORT = process.env.PORT || 5001;
 
 // Initialize Server
 const startServer = async () => {
   try {
-    // Connect to Database
+    // Connect to MongoDB (existing models)
     await connectDB();
 
+    // Initialize MySQL (auth tables)
+    await initDatabase();
+
     // Start Express Server
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`[Server] running on http://localhost:${PORT} in ${process.env.NODE_ENV} mode`);
     });
+
+    // ── Graceful Shutdown ──
+    const shutdown = async (signal) => {
+      console.log(`\n[Server] ${signal} received — shutting down gracefully...`);
+      server.close(async () => {
+        await closePool();
+        console.log('[Server] Shutdown complete');
+        process.exit(0);
+      });
+    };
+
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
   } catch (error) {
     console.error(`[Server] initialization failed: ${error.message}`);
     process.exit(1);
