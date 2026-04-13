@@ -1,28 +1,32 @@
 const Teacher = require('../models/Teacher');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const teacherRepository = new BaseRepository(Teacher);
+const userRepository = new BaseRepository(User);
 
 const createTeacher = async (data) => {
   const { email, password, ...teacherData } = data;
 
-  const existingUser = await User.findOne({ email });
+  const existingUser = await userRepository.findOne({ email });
   if (existingUser) {
     throw new ApiError(400, 'A user account with this email already exists');
   }
 
-  const existingTeacher = await Teacher.findOne({ employeeId: teacherData.employeeId });
+  const existingTeacher = await teacherRepository.findOne({ employeeId: teacherData.employeeId });
   if (existingTeacher) {
     throw new ApiError(400, 'A teacher with this Employee ID already exists');
   }
 
-  const user = await User.create({ email, password, role: 'TEACHER' });
+  const user = await userRepository.create({ email, password, role: 'TEACHER' });
 
   try {
-    const teacher = await Teacher.create({ ...teacherData, userId: user._id });
+    const teacher = await teacherRepository.create({ ...teacherData, userId: user._id });
     return teacher;
   } catch (error) {
     // Cleanup orphaned auth account if profile fails to map
-    await User.findByIdAndDelete(user._id);
+    await userRepository.deleteById(user._id);
     throw error;
   }
 };
@@ -47,14 +51,14 @@ const getTeachers = async (query) => {
     ];
   }
 
-  const teachers = await Teacher.find(filter)
+  const teachers = await teacherRepository.find(filter)
     .populate('userId', 'email role isActive')
     .populate('subjectsHandled', 'name code') // Safely degrades if Subject models aren't present yet
     .skip(Number(skip))
     .limit(Number(limit))
     .sort({ createdAt: -1 });
 
-  const total = await Teacher.countDocuments(filter);
+  const total = await teacherRepository.count(filter);
 
   return {
     teachers,
@@ -68,7 +72,7 @@ const getTeachers = async (query) => {
 };
 
 const getTeacherById = async (id) => {
-  const teacher = await Teacher.findById(id)
+  const teacher = await teacherRepository.findById(id)
     .populate('userId', 'email role isActive')
     .populate('subjectsHandled', 'name code');
 
@@ -80,7 +84,7 @@ const getTeacherById = async (id) => {
 
 const updateTeacher = async (id, updateData) => {
   // If subjectsHandled is sent, mongo overwrites the whole array natively keeping it clean assignment
-  const teacher = await Teacher.findByIdAndUpdate(id, updateData, { 
+  const teacher = await teacherRepository.updateById(id, updateData, { 
     new: true, 
     runValidators: true 
   });
@@ -91,14 +95,14 @@ const updateTeacher = async (id, updateData) => {
   
   // If explicitly suspending/activating from the route, sync security block to Auth Account
   if (updateData.isActive !== undefined) {
-    await User.findByIdAndUpdate(teacher.userId, { isActive: updateData.isActive });
+    await userRepository.updateById(teacher.userId, { isActive: updateData.isActive });
   }
 
   return teacher;
 };
 
 const softDeleteTeacher = async (id) => {
-  const teacher = await Teacher.findByIdAndUpdate(
+  const teacher = await teacherRepository.updateById(
     id,
     { isActive: false },
     { new: true }
@@ -109,7 +113,7 @@ const softDeleteTeacher = async (id) => {
   }
 
   // Deactivate login capabilities seamlessly during soft drop
-  await User.findByIdAndUpdate(teacher.userId, { isActive: false });
+  await userRepository.updateById(teacher.userId, { isActive: false });
   return true;
 };
 

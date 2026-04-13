@@ -3,15 +3,21 @@ const Class = require('../models/Class');
 const Section = require('../models/Section');
 const Subject = require('../models/Subject');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const examRepository = new BaseRepository(Exam);
+const classRepository = new BaseRepository(Class);
+const sectionRepository = new BaseRepository(Section);
+const subjectRepository = new BaseRepository(Subject);
 
 const createExam = async (data) => {
   // Validate parent Class existence
-  const existingClass = await Class.findById(data.classId);
+  const existingClass = await classRepository.findById(data.classId);
   if (!existingClass) throw new ApiError(404, 'Database Validation: Class not found');
 
   // Validate optional Section mapping logically
   if (data.sectionId) {
-    const existingSection = await Section.findById(data.sectionId);
+    const existingSection = await sectionRepository.findById(data.sectionId);
     if (!existingSection) throw new ApiError(404, 'Database Validation: Section not found');
     
     // Cross-check that the section natively belongs to this exact class id
@@ -23,7 +29,7 @@ const createExam = async (data) => {
   // Validate internal Subjects block
   const subjectIds = data.schedule.map(s => s.subjectId);
   // Ensure we don't accidentally schedule a subject that isn't taught in this specific class
-  const verifiedSubjects = await Subject.countDocuments({ 
+  const verifiedSubjects = await subjectRepository.count({ 
     _id: { $in: subjectIds }, 
     classId: data.classId 
   });
@@ -39,7 +45,7 @@ const createExam = async (data) => {
     }
   }
 
-  return await Exam.create(data);
+  return await examRepository.create(data);
 };
 
 const getExams = async (query) => {
@@ -52,7 +58,7 @@ const getExams = async (query) => {
   if (status) filter.status = status;
   if (academicYear) filter.academicYear = academicYear;
 
-  const exams = await Exam.find(filter)
+  const exams = await examRepository.find(filter)
     .populate('classId', 'className classCode')
     .populate('sectionId', 'sectionName')
     .populate('schedule.subjectId', 'subjectName subjectCode')
@@ -60,13 +66,13 @@ const getExams = async (query) => {
     .limit(Number(limit))
     .sort({ createdAt: -1 });
 
-  const total = await Exam.countDocuments(filter);
+  const total = await examRepository.count(filter);
 
   return { exams, pagination: { total, page: Number(page), limit: Number(limit) } };
 };
 
 const getExamById = async (id) => {
-  const exam = await Exam.findById(id)
+  const exam = await examRepository.findById(id)
     .populate('classId', 'className classCode')
     .populate('sectionId', 'sectionName')
     .populate('schedule.subjectId', 'subjectName subjectCode');
@@ -77,14 +83,14 @@ const getExamById = async (id) => {
 
 const updateExam = async (id, updateData) => {
   // If schedule is updated natively, we should validate it ideally, but native mongoose runValidators intercepts structural issues
-  const exam = await Exam.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+  const exam = await examRepository.updateById(id, updateData, { new: true, runValidators: true });
   if (!exam) throw new ApiError(404, 'Exam schedule lookup failed');
   return exam;
 };
 
 const deleteExam = async (id) => {
   // Exam schedules can be hard-deleted if they haven't been published/processed or soft-deleted 
-  const exam = await Exam.findByIdAndDelete(id);
+  const exam = await examRepository.deleteById(id);
   if (!exam) throw new ApiError(404, 'Exam schedule lookup failed');
   return true;
 };

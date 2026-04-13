@@ -1,13 +1,16 @@
 const Student = require('../models/Student');
 const ApiError = require('../utils/ApiError');
+const StudentRepository = require('../repositories/StudentRepository');
+
+const studentRepository = new StudentRepository(Student);
 
 const createStudent = async (studentData) => {
-  const existingStudent = await Student.findOne({ enrollmentNo: studentData.enrollmentNo });
+  const existingStudent = await studentRepository.findOne({ enrollmentNo: studentData.enrollmentNo });
   if (existingStudent) {
     throw new ApiError(400, 'A student with this enrollment number already exists');
   }
 
-  const student = await Student.create(studentData);
+  const student = await studentRepository.create(studentData);
   return student;
 };
 
@@ -30,14 +33,13 @@ const getStudents = async (query) => {
     ];
   }
 
-  // Without actual Class/Section models, populate won't inject objects perfectly, 
-  // but it's set up for when they do exist.
-  const students = await Student.find(filter)
+  const students = await studentRepository
+    .find(filter)
     .skip(Number(skip))
     .limit(Number(limit))
     .sort({ createdAt: -1 });
 
-  const total = await Student.countDocuments(filter);
+  const total = await studentRepository.count(filter);
 
   return {
     students,
@@ -51,7 +53,7 @@ const getStudents = async (query) => {
 };
 
 const getStudentById = async (id) => {
-  const student = await Student.findOne({ _id: id, isActive: true });
+  const student = await studentRepository.findActiveById(id);
   if (!student) {
     throw new ApiError(404, 'Student not found');
   }
@@ -59,11 +61,7 @@ const getStudentById = async (id) => {
 };
 
 const updateStudent = async (id, updateData) => {
-  const student = await Student.findOneAndUpdate(
-    { _id: id, isActive: true },
-    updateData,
-    { new: true, runValidators: true }
-  );
+  const student = await studentRepository.updateActiveById(id, updateData);
   
   if (!student) {
     throw new ApiError(404, 'Student not found');
@@ -72,11 +70,7 @@ const updateStudent = async (id, updateData) => {
 };
 
 const softDeleteStudent = async (id) => {
-  const student = await Student.findOneAndUpdate(
-    { _id: id, isActive: true },
-    { isActive: false, status: 'ALUMNI' },
-    { new: true }
-  );
+  const student = await studentRepository.softDeleteById(id);
 
   if (!student) {
     throw new ApiError(404, 'Student not found');

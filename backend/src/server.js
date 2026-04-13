@@ -10,9 +10,6 @@ const startServer = async () => {
   try {
     // Connect to MongoDB (existing models)
     await connectDB();
-
-
-
     // Start Express Server
     const server = app.listen(PORT, () => {
       console.log(`[Server] running on http://localhost:${PORT} in ${process.env.NODE_ENV} mode`);
@@ -22,7 +19,6 @@ const startServer = async () => {
     const shutdown = async (signal) => {
       console.log(`\n[Server] ${signal} received — shutting down gracefully...`);
       server.close(async () => {
-        await closePool();
         console.log('[Server] Shutdown complete');
         process.exit(0);
       });

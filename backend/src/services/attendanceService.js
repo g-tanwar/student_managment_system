@@ -1,5 +1,8 @@
 const Attendance = require('../models/Attendance');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const attendanceRepository = new BaseRepository(Attendance);
 
 // Normalizes an incoming ISO date to pure midnight UTC to prevent time-shift duplication
 const normalizeDate = (dateString) => {
@@ -11,13 +14,13 @@ const normalizeDate = (dateString) => {
 const markSingle = async (data, userId) => {
   const date = normalizeDate(data.date);
 
-  const existing = await Attendance.findOne({ studentId: data.studentId, date });
+  const existing = await attendanceRepository.findOne({ studentId: data.studentId, date });
   if (existing) {
     throw new ApiError(400, 'Duplicate Error: Attendance has already been marked for this student on this date');
   }
 
   const record = { ...data, date, markedBy: userId };
-  return await Attendance.create(record);
+  return await attendanceRepository.create(record);
 };
 
 const markBulk = async (data, userId) => {
@@ -32,7 +35,7 @@ const markBulk = async (data, userId) => {
   }
 
   // Verification 2: Does any student already have an attendance record for this exact day?
-  const existingRecords = await Attendance.find({
+  const existingRecords = await attendanceRepository.find({
     studentId: { $in: studentIds },
     date,
   });
@@ -66,7 +69,7 @@ const getDailySheet = async (query) => {
 
   const targetDate = normalizeDate(date);
 
-  return await Attendance.find({ classId, sectionId, date: targetDate })
+  return await attendanceRepository.find({ classId, sectionId, date: targetDate })
     .populate('studentId', 'firstName lastName enrollmentNo')
     .populate('markedBy', 'email role');
 };
@@ -82,7 +85,7 @@ const getStudentReport = async (studentId, query) => {
     };
   }
 
-  const records = await Attendance.find(filter).sort({ date: -1 });
+  const records = await attendanceRepository.find(filter).sort({ date: -1 });
 
   // Compute Aggregations natively without heavy map-reduce
   const summary = {
@@ -100,11 +103,7 @@ const getStudentReport = async (studentId, query) => {
 };
 
 const updateAttendanceStatus = async (id, status) => {
-  const record = await Attendance.findByIdAndUpdate(
-    id,
-    { status },
-    { new: true, runValidators: true }
-  );
+  const record = await attendanceRepository.updateById(id, { status }, { new: true, runValidators: true });
 
   if (!record) throw new ApiError(404, 'Target Attendance record could not be found');
   return record;
