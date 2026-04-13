@@ -1,7 +1,7 @@
 require('dotenv').config({ override: true });
 const app = require('./app');
 const connectDB = require('./config/db');
-const { initDatabase, closePool } = require('./config/mysql');
+
 
 const PORT = process.env.PORT || 5001;
 
@@ -11,8 +11,7 @@ const startServer = async () => {
     // Connect to MongoDB (existing models)
     await connectDB();
 
-    // Initialize MySQL (auth tables)
-    await initDatabase();
+
 
     // Start Express Server
     const server = app.listen(PORT, () => {
