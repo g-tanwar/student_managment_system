@@ -89,8 +89,9 @@ The application codebase is modularly divided to separate client and server conc
  ┗ 📜 package.json    # Root dependencies
 
  ```
- 
-7. Frontend Structure & Routing
+ ---
+
+## 7. Frontend Structure & Routing
 Auth Module: Login/Signup with secure JWT token storage in local environment.
 
 Layout: Persistent Sidebar and TopNav implementing role-based routing constraints.
@@ -103,7 +104,9 @@ Services: Centralized api.js (using Axios), attendanceService, feeService, stude
 
 Hooks: Custom useAuth hook utilizing Context API for global JWT persistence.
 
-8. Object-Oriented Programming (OOP) Concepts Applied
+---
+
+## 8. Object-Oriented Programming (OOP) Concepts Applied
 Encapsulation: Sensitive data (like passwords) hidden within User models; JWT tokens encapsulated in client storage.
 
 Inheritance: General User identity inherited by Teacher profiles (linked via userId).
@@ -112,7 +115,9 @@ Abstraction: The Service layer abstracts complex external API calls away from th
 
 Polymorphism: Utilizing varied report generation methods and structures for different modules (marks, attendance, fees).
 
-9. Software Design Patterns
+---
+
+## 9. Software Design Patterns
 Singleton Pattern: Assured single instance for MongoDB connection (connectDB) and Axios HTTP client (api.js).
 
 MVC Pattern: Clear separation of Models, Controllers, and Services in the backend.
@@ -121,7 +126,9 @@ Context Pattern: AuthContext utilized for managing global authentication state a
 
 Observer Pattern: React useEffect hooks acting as observers for state changes and data fetching.
 
-10. SOLID Principles Implemented
+---
+
+## 10. SOLID Principles Implemented
 Single Responsibility (SRP): Each service file is strictly responsible for handling operations related to one entity only (e.g., student, fee).
 
 Open/Closed (OCP): Middleware configurations allow the application to be extended (e.g., adding new auth strategies) without modifying existing core routes.
