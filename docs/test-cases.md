@@ -27,7 +27,7 @@
 | TC14 | Get Single Student | Valid student ID | Student object | ✅ Pass |
 | TC15 | Get Invalid Student | Wrong ID | 404 Not found | ✅ Pass |
 | TC16 | Update Student | Valid ID + data | Updated student | ✅ Pass |
-| TC17 | Delete Student | Valid student ID | Student archived | ✅ Pass |
+| TC17 | Delete Student | Valid student ID | Student archived (Soft Delete) | ✅ Pass |
 | TC18 | Add Student from UI | Fill form + Submit | Student added, list refreshed | ✅ Pass |
 | TC19 | Delete Student from UI | Click Delete button | Confirm dialog, student removed | ✅ Pass |
 | TC20 | View Students by Class | classId filter | Filtered student list | ✅ Pass |
@@ -58,7 +58,7 @@
 | TC31 | Get Student Report | studentId | Summary + records | ✅ Pass |
 | TC32 | Update Attendance | Valid ID + new status | Updated record | ✅ Pass |
 | TC33 | Fetch Students in Bulk UI | Select Class+Section | Student list loaded | ✅ Pass |
-| TC34 | Submit Bulk Attendance from UI | Mark all + Submit | Success message shown | ✅ Pass |
+| TC34 | Submit Bulk Attendance UI | Mark all + Submit | Success message shown | ✅ Pass |
 | TC35 | Bulk UI without class/section | Click Fetch | Alert: select class and section | ✅ Pass |
 
 ---
@@ -92,7 +92,7 @@
 
 ---
 
-## 7. Goals Tracker Test Cases (Frontend)
+## 7. Productivity Tools Test Cases (Student Dashboard)
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
@@ -100,9 +100,11 @@
 | TC52 | Add goal without title | Empty title | Button disabled | ✅ Pass |
 | TC53 | Update goal progress | Drag slider | Progress bar updates | ✅ Pass |
 | TC54 | Mark goal complete | Click Mark Complete | Progress = 100%, moved to Completed | ✅ Pass |
-| TC55 | Delete goal | Click Delete | Goal removed from list | ✅ Pass |
-| TC56 | Goals persist on refresh | Reload page | Goals loaded from localStorage | ✅ Pass |
-| TC57 | Overdue goal display | Deadline in past | Overdue warning shown | ✅ Pass |
+| TC55 | Pomodoro Start/Pause | Click Start/Pause | Timer counts down or pauses | ✅ Pass |
+| TC56 | Pomodoro Reset | Click Reset | Timer resets to default minutes | ✅ Pass |
+| TC57 | Add Note | Title + Content | Note saved and displayed | ✅ Pass |
+| TC58 | Delete Note | Click Delete icon | Note removed from UI | ✅ Pass |
+| TC59 | View Schedule | Load /schedule page | Timetable/events displayed | ✅ Pass |
 
 ---
 
@@ -110,21 +112,23 @@
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC58 | Create Notice | Valid data + Admin JWT | 201 Notice created | ✅ Pass |
-| TC59 | Create Notice as Teacher | Teacher JWT | 403 Forbidden | ✅ Pass |
-| TC60 | Get All Notices | Valid JWT | Notice list | ✅ Pass |
-| TC61 | Get Notice by audience | audience=STUDENTS | Filtered + ALL notices | ✅ Pass |
-| TC62 | Update Notice | Valid ID + data | Updated notice | ✅ Pass |
-| TC63 | Delete Notice | Valid ID | Notice deleted | ✅ Pass |
+| TC60 | Create Notice | Valid data + Admin JWT | 201 Notice created | ✅ Pass |
+| TC61 | Create Notice as Teacher | Teacher JWT | 403 Forbidden | ✅ Pass |
+| TC62 | Get All Notices | Valid JWT | Notice list | ✅ Pass |
+| TC63 | Get Notice by audience | audience=STUDENTS | Filtered + ALL notices | ✅ Pass |
+| TC64 | Update Notice | Valid ID + data | Updated notice | ✅ Pass |
+| TC65 | Delete Notice | Valid ID | Notice deleted | ✅ Pass |
 
 ---
 
-## 9. Navigation & Routing Test Cases (Frontend)
+## 9. Navigation, Profile & Routing Test Cases
 
 | TC ID | Test Case | Input | Expected Output | Status |
 |-------|-----------|-------|-----------------|--------|
-| TC64 | Access /dashboard without login | No token | Redirect to /login | ✅ Pass |
-| TC65 | Access /login after login | Valid token | Redirect to /dashboard | ✅ Pass |
-| TC66 | Unknown route | /xyz | Redirect to / | ✅ Pass |
-| TC67 | Sidebar navigation | Click Attendance | Navigate to /attendance | ✅ Pass |
-| TC68 | Page title in TopNav | Visit /fees | Shows "Fee Management" | ✅ Pass |
+| TC66 | Access /dashboard without login | No token | Redirect to /login | ✅ Pass |
+| TC67 | Access /login after login | Valid token | Redirect to /dashboard | ✅ Pass |
+| TC68 | Unknown route | /xyz | Redirect to / (or 404 page) | ✅ Pass |
+| TC69 | Sidebar navigation | Click Attendance | Navigate to /attendance | ✅ Pass |
+| TC70 | Role-Based UI Rendering | Student logs in | Admin menus hidden | ✅ Pass |
+| TC71 | View Profile | Click Profile icon | User details displayed | ✅ Pass |
+| TC72 | Update Profile details | Change phone/address | Profile updated successfully | ✅ Pass |
