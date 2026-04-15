@@ -1,4 +1,4 @@
-# Student Management System
+#  Student Management System
 
 A complete full-stack web application designed to efficiently manage student records, track academic progress, and streamline administrative tasks. 
 
@@ -6,7 +6,7 @@ A complete full-stack web application designed to efficiently manage student rec
 
 ---
 
-## Features
+##  Features
 
 * **User Authentication:** Secure login for admins, teachers, and students.
 * **Dashboard:** An intuitive overview of key metrics and recent activities.
@@ -16,7 +16,7 @@ A complete full-stack web application designed to efficiently manage student rec
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 * **Frontend:** JavaScript, HTML5, CSS3 , React.js 
 * **Backend:** Node.js, Express.js
@@ -25,7 +25,7 @@ A complete full-stack web application designed to efficiently manage student rec
 
 ---
 
-## 📂 Folder Structure
+##  Folder Structure
 
 The repository is organized as follows:
 
@@ -40,7 +40,7 @@ The repository is organized as follows:
  ┣  package.json    # Project dependencies and scripts
  ┗  README.md       # Project overview
 
- ⚙️ Local Setup & Installation
+  Local Setup & Installation
 To run this project locally on your machine, follow these steps:
 
 1. Clone the repository:
@@ -74,14 +74,36 @@ npm start
 # Start the frontend server
 cd ../frontend
 npm start
- System Architecture & Diagrams
-To understand the core workflow and database design, please refer to the diagrams/ and docs/ folders. It includes detailed ER diagrams and architectural layouts that explain how different components interact.
+```
 
- Contributing
-Contributions, issues, and feature requests are welcome!
-Feel free to check the issues page if you want to contribute.
+##  System Architecture & Diagrams
 
- License
-This project is open-source and available under the MIT License.
+To understand the core workflow, database design, and object interactions, we have structured visual models. These explain the internal mechanisms and data flow of the application:
 
+* **Class Diagram:** Shows the OOP structure, inheritance, and relationships between users and system entities.
+* **Use Case Diagram:** Illustrates role-based access control (Admin, Teacher, Student) and system capabilities.
+* **Sequence Diagram:** Explains the step-by-step API execution and JWT verification (e.g., Bulk Attendance flow).
+* **ER Diagram:** Details the MongoDB schema design and entity references using Crow's Foot notation.
 
+>  *You can explore all detailed diagrams in the [diagrams/](./diagrams/) and [docs/](./docs/) folders.*
+
+---
+
+##  Contributing
+
+Contributions, issues, and feature requests are highly welcome! Whether you are fixing a bug or adding a new feature, your help is appreciated.
+
+**How to contribute:**
+1. **Fork** the repository.
+2. **Create** your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`).
+4. **Push** to the Branch (`git push origin feature/AmazingFeature`).
+5. **Open** a Pull Request.
+
+Feel free to check the [issues page](https://github.com/g-tanwar/student_managment_system/issues) if you are looking for ideas on what to contribute.
+
+---
+
+##  License
+
+This project is open-source and distributed under the **[MIT License](LICENSE)**. Feel free to use, modify, and distribute it as per the license terms.
