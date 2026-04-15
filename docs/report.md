@@ -88,6 +88,8 @@ The application codebase is modularly divided to separate client and server conc
  ┣ 📂 local_backup/   # Local environment backups
  ┗ 📜 package.json    # Root dependencies
 
+ ```
+ 
 7. Frontend Structure & Routing
 Auth Module: Login/Signup with secure JWT token storage in local environment.
 
