@@ -1,120 +1,87 @@
-# Student Management System
+# 🎓 Student Management System
 
-A web-based Student Task Management System — EduPortal — built using 
-React.js, Node.js, and MongoDB. This system allows administrators to manage 
-students, teachers, attendance, marks, fees and notices efficiently, while 
-students can track their own attendance, fees, goals and more.
+A complete full-stack web application designed to efficiently manage student records, track academic progress, and streamline administrative tasks. 
+
+**Live Demo:** [Student Management System](https://student-managment-system-eta-self.vercel.app)
 
 ---
 
 ## 🚀 Features
 
-- JWT Based Authentication (Admin/Teacher/Student roles)
-- Add / Update / Delete Students
-- Teacher Management
-- Class and Section Management
-- Bulk Attendance Marking
-- Marks Management with Exam Scheduling
-- Fee Management with Payment History
-- Notice Board
-- Role Based Access Control (RBAC)
-- Student Dashboard (Attendance, Fees, Goals, Notes, Pomodoro)
+* **User Authentication:** Secure login for admins, teachers, and students.
+* **Dashboard:** An intuitive overview of key metrics and recent activities.
+* **Student Records:** Easily add, update, view, and delete student information (CRUD operations).
+* **Database Integration:** Secure and reliable data storage.
+* **Responsive Design:** Fully functional across desktops, tablets, and mobile devices.
 
 ---
 
-## 🏗️ Tech Stack
+## 🛠️ Tech Stack
 
-| Layer      | Technology              |
-|------------|-------------------------|
-| Frontend   | React.js, React Router  |
-| Backend    | Node.js (Express.js)    |
-| Database   | MongoDB (Mongoose)      |
-| Auth       | JWT                     |
-| Validation | Joi                     |
-| Styling    | CSS Modules             |
+* **Frontend:** JavaScript, HTML5, CSS3 *(Update with React.js if applicable)*
+* **Backend:** Node.js, Express.js
+* **Database:** *(Specify your DB here, e.g., MySQL, MongoDB, PostgreSQL)*
+* **Deployment:** Vercel
 
 ---
 
-## 👥 Team Members & Contributions
+## 📂 Folder Structure
 
-| Name             | Role                  |
-|------------------|-----------------------|
-| Gourav Tanwar    | Backend Developer     |
-| Kashika Agarwal  | Docs + UML + Testing  |
-| Shrijan Sanidhya | Frontend Developer    |
+The repository is organized as follows:
 
----
+```text
+📦 student_managment_system
+ ┣ 📂 backend/        # Server-side logic, API routes, and controllers
+ ┣ 📂 database/       # Database schemas, models, and connection scripts
+ ┣ 📂 diagrams/       # System architecture and ER diagrams
+ ┣ 📂 docs/           # Project documentation and notes
+ ┣ 📂 frontend/       # Client-side UI components and styling
+ ┣ 📂 local_backup/   # Local backups for code or database
+ ┣ 📜 package.json    # Project dependencies and scripts
+ ┗ 📜 README.md       # Project overview
 
-## 📁 Project Structure
-student_managment_system/
-├── backend/
-│   └── src/
-│       ├── config/
-│       ├── controllers/
-│       ├── middlewares/
-│       ├── models/
-│       ├── routes/
-│       ├── services/
-│       ├── utils/
-│       └── validations/
-├── frontend/
-│   └── src/
-│       ├── components/
-│       ├── hooks/
-│       ├── layout/
-│       ├── pages/
-│       │   ├── admin/
-│       │   ├── auth/
-│       │   └── student/
-│       ├── services/
-│       └── styles/
-├── diagrams/
-│   ├── class-diagram.txt
-│   ├── er-diagram.txt
-│   ├── sequence-diagram.txt
-│   ├── use-case.txt
-│   └── diagram.txt
-└── docs/
-├── report.md
-└── test-cases.md
+ ⚙️ Local Setup & Installation
+To run this project locally on your machine, follow these steps:
 
----
+1. Clone the repository:
+git clone [https://github.com/g-tanwar/student_managment_system.git](https://github.com/g-tanwar/student_managment_system.git)
+cd student_managment_system
+2. Install Dependencies:
+Navigate to both the frontend and backend directories and install the required npm packages.
 
-## ⚙️ How to Run
-
-1. Clone the repository
-```bash
-git clone https://github.com/g-tanwar/student_managment_system.git
-```
-
-2. Install backend dependencies
-```bash
+Bash
+# Install backend dependencies
 cd backend
 npm install
-```
 
-3. Setup environment variables
-```bash
-cp .env.example .env
-```
-
-4. Run the backend
-```bash
-node src/server.js
-```
-
-5. Install frontend dependencies
-```bash
-cd frontend
+# Install frontend dependencies (if applicable)
+cd ../frontend
 npm install
-```
+3. Environment Variables:
+Create a .env file in the backend directory and add your database credentials and secret keys.
 
-6. Run the frontend
-```bash
-npm run dev
-```
+Code snippet
+PORT=5000
+DATABASE_URL=your_database_connection_string
+JWT_SECRET=your_secret_key
+4. Run the Application:
 
----
+Bash
+# Start the backend server
+cd backend
+npm start
 
-## 📄 License
-MIT License 
+# Start the frontend server
+cd ../frontend
+npm start
+📊 System Architecture & Diagrams
+To understand the core workflow and database design, please refer to the diagrams/ and docs/ folders. It includes detailed ER diagrams and architectural layouts that explain how different components interact.
+
+🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+Feel free to check the issues page if you want to contribute.
+
+📄 License
+This project is open-source and available under the MIT License.
+
+
