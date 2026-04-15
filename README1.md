@@ -1,4 +1,4 @@
-# 🎓 Student Management System
+# Student Management System
 
 A complete full-stack web application designed to efficiently manage student records, track academic progress, and streamline administrative tasks. 
 
@@ -6,7 +6,7 @@ A complete full-stack web application designed to efficiently manage student rec
 
 ---
 
-## 🚀 Features
+## Features
 
 * **User Authentication:** Secure login for admins, teachers, and students.
 * **Dashboard:** An intuitive overview of key metrics and recent activities.
@@ -30,15 +30,15 @@ A complete full-stack web application designed to efficiently manage student rec
 The repository is organized as follows:
 
 ```text
-📦 student_managment_system
- ┣ 📂 backend/        # Server-side logic, API routes, and controllers
- ┣ 📂 database/       # Database schemas, models, and connection scripts
- ┣ 📂 diagrams/       # System architecture and ER diagrams
- ┣ 📂 docs/           # Project documentation and notes
- ┣ 📂 frontend/       # Client-side UI components and styling
- ┣ 📂 local_backup/   # Local backups for code or database
- ┣ 📜 package.json    # Project dependencies and scripts
- ┗ 📜 README.md       # Project overview
+ student_managment_system
+ ┣  backend/        # Server-side logic, API routes, and controllers
+ ┣  database/       # Database schemas, models, and connection scripts
+ ┣  diagrams/       # System architecture and ER diagrams
+ ┣  docs/           # Project documentation and notes
+ ┣  frontend/       # Client-side UI components and styling
+ ┣  local_backup/   # Local backups for code or database
+ ┣  package.json    # Project dependencies and scripts
+ ┗  README.md       # Project overview
 
  ⚙️ Local Setup & Installation
 To run this project locally on your machine, follow these steps:
@@ -74,14 +74,14 @@ npm start
 # Start the frontend server
 cd ../frontend
 npm start
-📊 System Architecture & Diagrams
+ System Architecture & Diagrams
 To understand the core workflow and database design, please refer to the diagrams/ and docs/ folders. It includes detailed ER diagrams and architectural layouts that explain how different components interact.
 
-🤝 Contributing
+ Contributing
 Contributions, issues, and feature requests are welcome!
 Feel free to check the issues page if you want to contribute.
 
-📄 License
+ License
 This project is open-source and available under the MIT License.
 
 
