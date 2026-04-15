@@ -1,16 +1,20 @@
 const Fee = require('../models/Fee');
 const Student = require('../models/Student');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const feeRepository = new BaseRepository(Fee);
+const studentRepository = new BaseRepository(Student);
 
 // PART A: Assign fee to a single student or batch to an entire class
 const assignFee = async (data) => {
   const { studentId, classId, feeType, academicYear, totalAmount, dueDate } = data;
 
   if (studentId) {
-    const student = await Student.findById(studentId);
+    const student = await studentRepository.findById(studentId);
     if (!student) throw new ApiError(404, 'Student not found');
 
-    const fee = await Fee.create({
+    const fee = await feeRepository.create({
       studentId,
       classId: student.classId, // Pull dynamically from the student profile
       feeType,
@@ -22,7 +26,7 @@ const assignFee = async (data) => {
 
   } else if (classId) {
     // Blanket class assignment grabs all currently enrolled active students
-    const students = await Student.find({ classId, isActive: true });
+    const students = await studentRepository.find({ classId, isActive: true });
     
     if (!students.length) {
       throw new ApiError(404, 'Class contains no active students to assign fees to');
@@ -44,7 +48,7 @@ const assignFee = async (data) => {
 
 // PART B: Logging transactions securely
 const recordPayment = async (feeId, paymentData, userId) => {
-  const fee = await Fee.findById(feeId);
+  const fee = await feeRepository.findById(feeId);
   if (!fee) throw new ApiError(404, 'Primary Fee invoice not found');
 
   if (fee.status === 'PAID') {
@@ -90,14 +94,14 @@ const getFeeInvoices = async (query) => {
   if (status) filter.status = status;
   if (academicYear) filter.academicYear = academicYear;
 
-  const fees = await Fee.find(filter)
+  const fees = await feeRepository.find(filter)
     .populate('studentId', 'firstName lastName enrollmentNo')
     .populate('classId', 'className')
     .skip(Number(skip))
     .limit(Number(limit))
     .sort({ dueDate: 1 });
 
-  const total = await Fee.countDocuments(filter);
+  const total = await feeRepository.count(filter);
 
   return { fees, pagination: { total, page: Number(page), limit: Number(limit) } };
 };

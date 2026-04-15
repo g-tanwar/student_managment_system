@@ -1,9 +1,13 @@
 const Mark = require('../models/Mark');
 const Exam = require('../models/Exam');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const markRepository = new BaseRepository(Mark);
+const examRepository = new BaseRepository(Exam);
 
 const verifyExamAndSubject = async (examId, subjectId) => {
-  const exam = await Exam.findById(examId);
+  const exam = await examRepository.findById(examId);
   if (!exam) throw new ApiError(404, 'Reference Error: Designated Exam not found');
 
   // Verify subject mapping to restrict orphaned marks
@@ -20,12 +24,12 @@ const submitSingleMark = async (data) => {
 
   await verifyExamAndSubject(data.examId, data.subjectId);
 
-  const existing = await Mark.findOne({ examId: data.examId, subjectId: data.subjectId, studentId: data.studentId });
+  const existing = await markRepository.findOne({ examId: data.examId, subjectId: data.subjectId, studentId: data.studentId });
   if (existing) {
     throw new ApiError(400, 'Duplicate protection triggered: Marks already successfully logged for this explicit combination');
   }
 
-  return await Mark.create(data);
+  return await markRepository.create(data);
 };
 
 const submitMarksBulk = async (data) => {
@@ -43,7 +47,7 @@ const submitMarksBulk = async (data) => {
   const studentIds = records.map((r) => r.studentId);
 
   // Security layer preventing half-commits if duplicates rest secretly inside payload
-  const existingRecords = await Mark.find({
+  const existingRecords = await markRepository.find({
     examId,
     subjectId,
     studentId: { $in: studentIds },
@@ -72,7 +76,7 @@ const getMarksheetForStudent = async (studentId, query) => {
   const filter = { studentId };
   if (query.examId) filter.examId = query.examId;
 
-  const marks = await Mark.find(filter)
+  const marks = await markRepository.find(filter)
     .populate('examId', 'examName academicYear')
     .populate('subjectId', 'subjectName subjectCode')
     .sort({ createdAt: -1 });
@@ -96,7 +100,7 @@ const getClassExamMarks = async (examId, query) => {
   if (query.subjectId) filter.subjectId = query.subjectId;
 
   // Use aggressive population to filter explicitly out by mapping target classroom
-  const marks = await Mark.find(filter)
+  const marks = await markRepository.find(filter)
     .populate({
       path: 'studentId',
       match: query.classId ? { classId: query.classId } : {},

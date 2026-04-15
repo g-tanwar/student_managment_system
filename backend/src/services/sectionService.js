@@ -1,21 +1,25 @@
 const Section = require('../models/Section');
 const Class = require('../models/Class'); // Import to conduct proper integrity checks
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const sectionRepository = new BaseRepository(Section);
+const classRepository = new BaseRepository(Class);
 
 const createSection = async (data) => {
   // Validate that the mapping class explicitly exists securely
-  const existingClass = await Class.findById(data.classId);
+  const existingClass = await classRepository.findById(data.classId);
   if (!existingClass) {
     throw new ApiError(404, 'Invalid Database Reference: The assigned Class does not exist');
   }
 
   // Double down on checking combinations to block DB rejection errors manually
-  const existingSection = await Section.findOne({ classId: data.classId, sectionName: data.sectionName });
+  const existingSection = await sectionRepository.findOne({ classId: data.classId, sectionName: data.sectionName });
   if (existingSection) {
     throw new ApiError(400, 'A Section with this exact name already exists in the requested Class');
   }
 
-  return await Section.create(data);
+  return await sectionRepository.create(data);
 };
 
 const getSections = async (query) => {
@@ -30,13 +34,13 @@ const getSections = async (query) => {
     filter.sectionName = { $regex: search, $options: 'i' };
   }
 
-  const sections = await Section.find(filter)
+  const sections = await sectionRepository.find(filter)
     .populate('classId', 'className classCode status')
     .skip(Number(skip))
     .limit(Number(limit))
     .sort({ createdAt: -1 });
 
-  const total = await Section.countDocuments(filter);
+  const total = await sectionRepository.count(filter);
 
   return {
     sections,
@@ -50,7 +54,7 @@ const getSections = async (query) => {
 };
 
 const getSectionById = async (id) => {
-  const section = await Section.findById(id).populate('classId', 'className classCode status');
+  const section = await sectionRepository.findById(id).populate('classId', 'className classCode status');
   if (!section) {
     throw new ApiError(404, 'Section lookup failed');
   }
@@ -60,7 +64,7 @@ const getSectionById = async (id) => {
 const updateSection = async (id, updateData) => {
   // Defensive logic checking constraints if class mapping gets updated
   if (updateData.classId) {
-    const existingClass = await Class.findById(updateData.classId);
+    const existingClass = await classRepository.findById(updateData.classId);
     if (!existingClass) {
       throw new ApiError(404, 'Invalid Database Reference: Target Class mapping does not exist');
     }
@@ -68,13 +72,13 @@ const updateSection = async (id, updateData) => {
 
   // Checks combinations to avoid compound unique DB crashes 
   if (updateData.sectionName || updateData.classId) {
-    const targetSection = await Section.findById(id);
+    const targetSection = await sectionRepository.findById(id);
     if (!targetSection) throw new ApiError(404, 'Section not found');
 
     const checkingClassId = updateData.classId || targetSection.classId;
     const checkingSectionName = updateData.sectionName || targetSection.sectionName;
 
-    const duplicateCheck = await Section.findOne({
+    const duplicateCheck = await sectionRepository.findOne({
       _id: { $ne: id }, // Compare others only
       classId: checkingClassId,
       sectionName: checkingSectionName
@@ -85,7 +89,7 @@ const updateSection = async (id, updateData) => {
     }
   }
 
-  const section = await Section.findByIdAndUpdate(id, updateData, { 
+  const section = await sectionRepository.updateById(id, updateData, { 
     new: true, 
     runValidators: true 
   });
@@ -94,7 +98,7 @@ const updateSection = async (id, updateData) => {
 };
 
 const deleteSection = async (id) => {
-  const section = await Section.findByIdAndUpdate(
+  const section = await sectionRepository.updateById(
     id, 
     { status: 'INACTIVE' }, 
     { new: true }

@@ -1,10 +1,13 @@
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const { generateToken } = require('../utils/jwtUtils');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const userRepository = new BaseRepository(User);
 
 const loginAdmin = async (email, password) => {
   // Try to find the user. Use +password to force selection since it's hidden by default
-  const user = await User.findOne({ email }).select('+password');
+  const user = await userRepository.findOne({ email }).select('+password');
   
   if (!user) {
     throw new ApiError(401, 'Invalid credentials setup or unauthorized');
@@ -29,20 +32,26 @@ const loginAdmin = async (email, password) => {
 };
 
 const getAdminProfile = async (userId) => {
-  const user = await User.findById(userId);
+  const user = await userRepository.findById(userId);
   if (!user) throw new ApiError(404, 'User profile could not be found');
   return user;
 };
 
 const seedDefaultAdmin = async () => {
-  const adminExists = await User.findOne({ role: 'ADMIN' });
+  const adminExists = await userRepository.findOne({ role: 'ADMIN' });
   if (adminExists) {
     throw new ApiError(400, 'Seed rejected: An admin account already exists');
   }
 
-  const admin = await User.create({
-    email: 'admin@school.com',
-    password: 'password123', // Hardcoded default, expected to be changed post-login
+  const seedEmail = process.env.ADMIN_SEED_EMAIL || 'admin@school.com';
+  const seedPassword = process.env.ADMIN_SEED_PASSWORD;
+  if (!seedPassword) {
+    throw new ApiError(500, 'Seed misconfigured: ADMIN_SEED_PASSWORD env var is required');
+  }
+
+  const admin = await userRepository.create({
+    email: seedEmail,
+    password: seedPassword,
     role: 'ADMIN',
   });
 
@@ -53,12 +62,12 @@ const seedDefaultAdmin = async () => {
 };
 
 const signupUser = async (email, password) => {
-  let existingUser = await User.findOne({ email });
+  let existingUser = await userRepository.findOne({ email });
   if (existingUser) {
     throw new ApiError(400, 'User already exists with this email');
   }
 
-  const user = await User.create({
+  const user = await userRepository.create({
     email,
     password, 
     role: 'STUDENT',

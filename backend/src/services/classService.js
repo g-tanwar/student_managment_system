@@ -1,9 +1,12 @@
 const Class = require('../models/Class');
 const ApiError = require('../utils/ApiError');
+const BaseRepository = require('../repositories/BaseRepository');
+
+const classRepository = new BaseRepository(Class);
 
 const createClass = async (data) => {
   // Prevent duplicate names or codes
-  const existingClass = await Class.findOne({
+  const existingClass = await classRepository.findOne({
     $or: [{ className: data.className }, { classCode: data.classCode }],
   });
   
@@ -11,7 +14,7 @@ const createClass = async (data) => {
     throw new ApiError(400, 'A class with this exact Name or Code already exists');
   }
 
-  return await Class.create(data);
+  return await classRepository.create(data);
 };
 
 const getClasses = async (query) => {
@@ -28,12 +31,12 @@ const getClasses = async (query) => {
     ];
   }
 
-  const classes = await Class.find(filter)
+  const classes = await classRepository.find(filter)
     .skip(Number(skip))
     .limit(Number(limit))
     .sort({ createdAt: -1 });
 
-  const total = await Class.countDocuments(filter);
+  const total = await classRepository.count(filter);
 
   return {
     classes,
@@ -47,7 +50,7 @@ const getClasses = async (query) => {
 };
 
 const getClassById = async (id) => {
-  const classDoc = await Class.findById(id);
+  const classDoc = await classRepository.findById(id);
   if (!classDoc) {
     throw new ApiError(404, 'Class mapping not found');
   }
@@ -55,7 +58,7 @@ const getClassById = async (id) => {
 };
 
 const updateClass = async (id, updateData) => {
-  const classDoc = await Class.findByIdAndUpdate(id, updateData, { 
+  const classDoc = await classRepository.updateById(id, updateData, { 
     new: true, 
     runValidators: true 
   });
@@ -69,7 +72,7 @@ const updateClass = async (id, updateData) => {
 
 const deleteClass = async (id) => {
   // Using status shifting to prevent foreign key breakages across the DB for historical data
-  const classDoc = await Class.findByIdAndUpdate(
+  const classDoc = await classRepository.updateById(
     id, 
     { status: 'INACTIVE' }, 
     { new: true }
