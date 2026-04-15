@@ -18,9 +18,9 @@ A complete full-stack web application designed to efficiently manage student rec
 
 ## 🛠️ Tech Stack
 
-* **Frontend:** JavaScript, HTML5, CSS3 *(Update with React.js if applicable)*
+* **Frontend:** JavaScript, HTML5, CSS3 , React.js 
 * **Backend:** Node.js, Express.js
-* **Database:** *(Specify your DB here, e.g., MySQL, MongoDB, PostgreSQL)*
+* **Database:**  MongoDB
 * **Deployment:** Vercel
 
 ---
