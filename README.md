@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🎓 Student Management System</h1>
+  <h1> Student Management System</h1>
   <p><strong>A complete full-stack web application designed to efficiently manage student records, track academic progress, and streamline administrative tasks.</strong></p>
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -9,33 +9,33 @@
   [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://student-managment-system-eta-self.vercel.app)
 
   <h3>
-    <a href="https://student-managment-system-eta-self.vercel.app">🔴 Live Demo</a>
+    <a href="https://student-managment-system-eta-self.vercel.app"> Live Demo</a>
     <span> | </span>
     <a href="#-getting-started">💻 Local Setup</a>
     <span> | </span>
-    <a href="#-architecture--design-patterns">🏗️ Architecture</a>
+    <a href="#-architecture--design-patterns"> Architecture</a>
   </h3>
 </div>
 
 ---
 
-## 🚀 Overview
+## Overview
 
 The **Student Management System** is built to bridge the gap between administrators, teachers, and students. By providing a scalable, secure, and user-friendly platform, this system eliminates manual record-keeping and enhances institutional productivity.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **🔐 Role-Based Authentication:** Secure access control tailored for Admins, Teachers, and Students using JWT.
-- **📊 Interactive Dashboard:** An intuitive, at-a-glance overview of key metrics, attendance rates, and recent institutional activities.
-- **🧑‍🎓 Complete Student Records:** Effortlessly perform CRUD (Create, Read, Update, Delete) operations on student profiles, grades, and fee records.
-- **📱 Fully Responsive Design:** Fluid UI that works flawlessly across desktops, tablets, and mobile devices.
-- **☁️ Cloud Database Integration:** Secure, reliable, and fast data storage powered by MongoDB Atlas.
+- ** Role-Based Authentication:** Secure access control tailored for Admins, Teachers, and Students using JWT.
+- ** Interactive Dashboard:** An intuitive, at-a-glance overview of key metrics, attendance rates, and recent institutional activities.
+- ** Complete Student Records:** Effortlessly perform CRUD (Create, Read, Update, Delete) operations on student profiles, grades, and fee records.
+- ** Fully Responsive Design:** Fluid UI that works flawlessly across desktops, tablets, and mobile devices.
+- ** Cloud Database Integration:** Secure, reliable, and fast data storage powered by MongoDB Atlas.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 **Frontend Interface**
 - **React.js** - UI Components & State Management
@@ -53,7 +53,7 @@ The **Student Management System** is built to bridge the gap between administrat
 
 ---
 
-## 🏗️ Architecture & Design Patterns
+##  Architecture & Design Patterns
 
 We pride ourselves on writing clean, maintainable, and scalable code. This project strictly adheres to **Software Design and Software Engineering (SDSE)** principles:
 
@@ -61,11 +61,11 @@ We pride ourselves on writing clean, maintainable, and scalable code. This proje
 * **Encapsulation & Abstraction:** We utilize the **Repository Pattern** to abstract database queries away from the business logic. 
 * **Factory Pattern:** We employ a `RepositoryFactory` to centralize the dynamic instantiation of database repositories, ensuring the code remains Open for extension but Closed for modification.
 
-> 📖 *For a deep dive into our design patterns, read the [SDSE Concepts Guide](./docs/sdse_concepts_guide.md).*
+>  *For a deep dive into our design patterns, read the [SDSE Concepts Guide](./docs/sdse_concepts_guide.md).*
 
 ---
 
-## 📁 Folder Structure
+##  Folder Structure
 
 ```text
 student_managment_system/
@@ -81,7 +81,7 @@ student_managment_system/
 
 ---
 
-## 💻 Getting Started
+##  Getting Started
 
 Follow these instructions to set up the project locally on your machine.
 
@@ -133,7 +133,7 @@ The application should now be running at `http://localhost:5173` (or port 3000 d
 
 ---
 
-## 📊 System Diagrams
+## System Diagrams
 
 To understand the core workflow, database design, and object interactions, explore our visual models in the `diagrams/` folder:
 
@@ -144,7 +144,7 @@ To understand the core workflow, database design, and object interactions, explo
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions, issues, and feature requests are highly welcome! 
 
@@ -156,6 +156,6 @@ Contributions, issues, and feature requests are highly welcome!
 
 ---
 
-## 📝 License
+##  License
 
 This project is open-source and distributed under the **[MIT License](LICENSE)**. Feel free to use, modify, and distribute it as per the license terms.
