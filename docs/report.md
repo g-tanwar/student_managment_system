@@ -1,4 +1,4 @@
-# 🎓 Student Management System (EduPortal) — Project Report
+#  Student Management System (EduPortal) — Project Report
 
 **Live Demo:** [student-managment-system-eta-self.vercel.app](https://student-managment-system-eta-self.vercel.app)  
 **Repository:** [GitHub - g-tanwar/student_managment_system](https://github.com/g-tanwar/student_managment_system)
@@ -13,7 +13,7 @@ Educational institutions face difficulty in managing student data manually. This
 
 ## 2. Key Features
 
-### 🛡️ Admin Features:
+###  Admin Features:
 - **Authentication:** JWT-Based secure login.
 - **Student Management:** Complete CRUD operations with soft delete functionality.
 - **Teacher Management:** Linked User accounts for faculty members.
@@ -24,7 +24,7 @@ Educational institutions face difficulty in managing student data manually. This
 - **Notice Board:** Audience-targeted announcements (ALL / STUDENTS / TEACHERS).
 - **Access Control:** Strict Role-Based Access Control (RBAC) ensuring data security.
 
-### 🎓 Student Features:
+###  Student Features:
 - **Dashboard:** Personalized overview of academic status.
 - **Attendance Tracking:** View own attendance records along with a generated summary.
 - **Fee Portal:** View fee status, payment history, and upload fee receipts directly.
@@ -79,14 +79,14 @@ Educational institutions face difficulty in managing student data manually. This
 The application codebase is modularly divided to separate client and server concerns:
 
 ```text
-📦 student_managment_system
- ┣ 📂 backend/        # Node.js server, API routes, controllers, and services
- ┣ 📂 database/       # Database connection scripts and seeders
- ┣ 📂 diagrams/       # UML, ER Diagrams, and architecture layouts
- ┣ 📂 docs/           # Documentation, including this project report
- ┣ 📂 frontend/       # React.js application, components, and pages
- ┣ 📂 local_backup/   # Local environment backups
- ┗ 📜 package.json    # Root dependencies
+ student_managment_system
+ ┣  backend/        # Node.js server, API routes, controllers, and services
+ ┣  database/       # Database connection scripts and seeders
+ ┣  diagrams/       # UML, ER Diagrams, and architecture layouts
+ ┣  docs/           # Documentation, including this project report
+ ┣  frontend/       # React.js application, components, and pages
+ ┣  local_backup/   # Local environment backups
+ ┗  package.json    # Root dependencies
 
  ```
  ---
