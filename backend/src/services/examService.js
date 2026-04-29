@@ -1,14 +1,12 @@
-const Exam = require('../models/Exam');
-const Class = require('../models/Class');
-const Section = require('../models/Section');
-const Subject = require('../models/Subject');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const examRepository = new BaseRepository(Exam);
-const classRepository = new BaseRepository(Class);
-const sectionRepository = new BaseRepository(Section);
-const subjectRepository = new BaseRepository(Subject);
+const {
+  exam: examRepository,
+  class: classRepository,
+  section: sectionRepository,
+  subject: subjectRepository,
+} = RepositoryFactory.createMany(['exam', 'class', 'section', 'subject']);
 
 const createExam = async (data) => {
   // Validate parent Class existence

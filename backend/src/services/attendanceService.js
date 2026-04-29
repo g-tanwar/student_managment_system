@@ -1,8 +1,8 @@
-const Attendance = require('../models/Attendance');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const Attendance = require('../models/Attendance');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const attendanceRepository = new BaseRepository(Attendance);
+const attendanceRepository = RepositoryFactory.create('attendance');
 
 // Normalizes an incoming ISO date to pure midnight UTC to prevent time-shift duplication
 const normalizeDate = (dateString) => {

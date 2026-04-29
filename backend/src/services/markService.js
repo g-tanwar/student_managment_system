@@ -1,10 +1,9 @@
-const Mark = require('../models/Mark');
 const Exam = require('../models/Exam');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const Mark = require('../models/Mark');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const markRepository = new BaseRepository(Mark);
-const examRepository = new BaseRepository(Exam);
+const { mark: markRepository, exam: examRepository } = RepositoryFactory.createMany(['mark', 'exam']);
 
 const verifyExamAndSubject = async (examId, subjectId) => {
   const exam = await examRepository.findById(examId);

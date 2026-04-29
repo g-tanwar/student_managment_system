@@ -1,10 +1,8 @@
-const Fee = require('../models/Fee');
-const Student = require('../models/Student');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const Fee = require('../models/Fee');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const feeRepository = new BaseRepository(Fee);
-const studentRepository = new BaseRepository(Student);
+const { fee: feeRepository, student: studentRepository } = RepositoryFactory.createMany(['fee', 'student']);
 
 // PART A: Assign fee to a single student or batch to an entire class
 const assignFee = async (data) => {

@@ -1,8 +1,7 @@
-const Notice = require('../models/Notice');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const noticeRepository = new BaseRepository(Notice);
+const noticeRepository = RepositoryFactory.create('notice');
 
 const createNotice = async (data, userId) => {
   if (data.publishDate && new Date(data.expiryDate) < new Date(data.publishDate)) {

@@ -1,12 +1,11 @@
-const Subject = require('../models/Subject');
-const Class = require('../models/Class');
-const Teacher = require('../models/Teacher');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const subjectRepository = new BaseRepository(Subject);
-const classRepository = new BaseRepository(Class);
-const teacherRepository = new BaseRepository(Teacher);
+const {
+  subject: subjectRepository,
+  class: classRepository,
+  teacher: teacherRepository,
+} = RepositoryFactory.createMany(['subject', 'class', 'teacher']);
 
 const createSubject = async (data) => {
   // Prevent duplicate systemic codes globally

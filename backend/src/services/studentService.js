@@ -1,8 +1,7 @@
-const Student = require('../models/Student');
 const ApiError = require('../utils/ApiError');
-const StudentRepository = require('../repositories/StudentRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const studentRepository = new StudentRepository(Student);
+const studentRepository = RepositoryFactory.create('student');
 
 const createStudent = async (studentData) => {
   const existingStudent = await studentRepository.findOne({ enrollmentNo: studentData.enrollmentNo });

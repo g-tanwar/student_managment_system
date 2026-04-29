@@ -1,8 +1,7 @@
-const Class = require('../models/Class');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const classRepository = new BaseRepository(Class);
+const classRepository = RepositoryFactory.create('class');
 
 const createClass = async (data) => {
   // Prevent duplicate names or codes

@@ -1,10 +1,7 @@
-const Section = require('../models/Section');
-const Class = require('../models/Class'); // Import to conduct proper integrity checks
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const sectionRepository = new BaseRepository(Section);
-const classRepository = new BaseRepository(Class);
+const { section: sectionRepository, class: classRepository } = RepositoryFactory.createMany(['section', 'class']);
 
 const createSection = async (data) => {
   // Validate that the mapping class explicitly exists securely

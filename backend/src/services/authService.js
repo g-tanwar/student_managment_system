@@ -1,9 +1,8 @@
-const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 const { generateToken } = require('../utils/jwtUtils');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const userRepository = new BaseRepository(User);
+const userRepository = RepositoryFactory.create('user');
 
 const loginAdmin = async (email, password) => {
   // Try to find the user. Use +password to force selection since it's hidden by default

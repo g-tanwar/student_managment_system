@@ -1,10 +1,7 @@
-const Teacher = require('../models/Teacher');
-const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
-const BaseRepository = require('../repositories/BaseRepository');
+const RepositoryFactory = require('../factories/repositoryFactory');
 
-const teacherRepository = new BaseRepository(Teacher);
-const userRepository = new BaseRepository(User);
+const { teacher: teacherRepository, user: userRepository } = RepositoryFactory.createMany(['teacher', 'user']);
 
 const createTeacher = async (data) => {
   const { email, password, ...teacherData } = data;
